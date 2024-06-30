@@ -3,7 +3,7 @@ package com.example.stundenzettelgeneratorkurzfristigearbeiter;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class HelloController {
+public class stundenzettelGeneratorController {
     @FXML
     private Label welcomeText;
 

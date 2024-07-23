@@ -6,18 +6,17 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="415.0" prefWidth="685.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.stundenzettel.StundenzettelController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="415.0" prefWidth="685.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.application.StundenzettelGeneratorController">
   <children>
     <HBox alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="485.0" spacing="10" styleClass="hbox-header" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="136.0" AnchorPane.topAnchor="14.0">
       <children>
         <HBox alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="281.0" styleClass="hbox-hbox-header">
           <children>
-            <Button fx:id="excelList" mnemonicParsing="false" prefHeight="36.0" prefWidth="145.0" styleClass="btn-header" text="Excel Liste">
+            <Button fx:id="excelList" mnemonicParsing="false" onAction="#switchViewExcel" prefHeight="36.0" prefWidth="145.0" styleClass="btn-header" text="Excel Liste">
               <font>
                 <Font name="Arial Bold" size="12.0" />
               </font></Button>
-            <Button fx:id="einzelerstellung" mnemonicParsing="false" prefHeight="36.0" prefWidth="145.0" styleClass="btn-header" text="Einzelerstellung">
+            <Button fx:id="einzelerstellung" mnemonicParsing="false" onAction="#switchViewEinzelerstellung" prefHeight="36.0" prefWidth="145.0" styleClass="btn-header" text="Einzelerstellung">
               <font>
                 <Font name="Arial Bold" size="12.0" />
               </font></Button>
@@ -44,7 +43,7 @@
             <Font name="Arial Bold" size="13.0" />
           </font></Label>
         <TextField fx:id="inputPathTextField" prefHeight="28.0" prefWidth="366.0" promptText="Hier können Sie den Pfad der Excel-Liste eingeben." HBox.hgrow="ALWAYS" />
-        <Button fx:id="btnChooseInputFile" mnemonicParsing="false" prefHeight="28.0">
+        <Button fx:id="btnChooseInputFile" mnemonicParsing="false" onAction="#chooseFile" prefHeight="28.0">
           <graphic>
             <FontAwesomeIconView glyphName="FOLDER" />
           </graphic>
@@ -114,14 +113,14 @@
               <Font name="Arial Bold" size="13.0" />
             </font></Label>
           <TextField fx:id="outputPathTextField" prefHeight="28.0" promptText="Hier können Sie das Ausgabeverzeichnis eingeben." HBox.hgrow="ALWAYS" />
-          <Button fx:id="btnChooseOutputFile" mnemonicParsing="false" prefHeight="28.0">
+          <Button fx:id="btnChooseOutputFile" mnemonicParsing="false" onAction="#chooseDirectory" prefHeight="28.0">
             <graphic>
               <FontAwesomeIconView glyphName="FOLDER" styleClass="icn-choose-inputfile" />
             </graphic>
           </Button>
         </HBox>
         <HBox alignment="TOP_RIGHT" prefHeight="17.0" prefWidth="525.0" VBox.vgrow="ALWAYS">
-          <CheckBox fx:id="checkboxErsetzen" alignment="CENTER_RIGHT" mnemonicParsing="false" selected="true" text="Datei ersetzen?">
+          <CheckBox fx:id="checkboxErsetzen" alignment="CENTER_RIGHT" disable="true" mnemonicParsing="false" selected="true" text="Datei ersetzen?">
             <font>
               <Font name="System Bold" size="12.0" />
             </font></CheckBox>
@@ -131,7 +130,7 @@
     <VBox alignment="CENTER_RIGHT" layoutX="72.0" layoutY="300.0" prefHeight="33.0" prefWidth="535.0" spacing="5" AnchorPane.bottomAnchor="82.0" AnchorPane.leftAnchor="72.0" AnchorPane.rightAnchor="78.0">
       <children>
         <Separator prefHeight="20.0" prefWidth="446.0" />
-        <Button fx:id="btnOk" alignment="CENTER_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" text="OK">
+        <Button fx:id="btnOk" alignment="CENTER_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btnOkClicked" text="OK">
           <font>
             <Font name="Arial Bold" size="12.0" />
           </font></Button>
@@ -161,7 +160,7 @@
       <font>
         <Font name="System Italic" size="12.0" />
       </font></Label>
-    <Label fx:id="lblDateiNichtAkzeptiert" layoutX="117.0" layoutY="128.0" prefHeight="17.0" prefWidth="416.0" text="Die Inhalte der Datei konnten teilweise oder gar nicht gelesen werden" textFill="#e10000" visible="false">
+    <Label fx:id="lblDateiNichtAkzeptiert" layoutX="117.0" layoutY="128.0" prefHeight="17.0" prefWidth="416.0" text="ungültige Eingabe" textFill="#e10000" visible="false">
       <font>
         <Font name="System Italic" size="12.0" />
       </font></Label>

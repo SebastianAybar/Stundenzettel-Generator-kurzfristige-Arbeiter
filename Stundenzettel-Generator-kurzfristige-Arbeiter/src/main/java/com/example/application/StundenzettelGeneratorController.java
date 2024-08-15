@@ -1,119 +1,134 @@
 package com.example.application;
 
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
 import java.io.File;
-import java.lang.reflect.Field;
 
 public class StundenzettelGeneratorController {
     @FXML
-    private Label lblStundenlohn;
+    private Button btnConfirm;
+
     @FXML
-    private Label lblDatei;
+    private Button btnEinzelerstellung;
+
     @FXML
-    private TextField textFieldStundenlohn;
+    private Button btnExcelList;
+
     @FXML
-    private AnchorPane anchorPane;
+    private Button btnInputPath;
+
     @FXML
-    private Button excelList;
-    @FXML
-    private Button einzelerstellung;
-    @FXML
-    private Button btnChooseInputFile;
-    @FXML
-    private Button btnChooseOutputFile;
-    @FXML
-    private Label inputFile;
-    @FXML
-    private Label outputFile;
-    @FXML
-    private TextField inputPathTextField;
-    @FXML
-    private TextField outputPathTextField;
-    @FXML
-    private CheckBox replaceFile;
-    @FXML
-    private Separator separator1;
-    @FXML
-    private Separator separator2;
-    @FXML
-    private Button calculate;
-    @FXML
-    private FontAwesomeIconView icnChooseInputFile;
-    @FXML
-    private FontAwesomeIconView icnChooseOutputFile;
-    @FXML
-    private HBox hboxExcelListeAnsicht;
-    @FXML
-    private HBox hboxEinzelerstellung;
-    @FXML
-    private TextField textFieldSvBrutto;
-    @FXML
-    private TextField textFieldName;
-    @FXML
-    private TextField textFieldMitarbeiternummer;
-    @FXML
-    private TextField textFieldAbrechnungsmonat;
-    @FXML
-    private Label lblAbrechnungsmonat;
-    @FXML
-    private Label lblMitarbeiternummer;
-    @FXML
-    private Label lblName;
-    @FXML
-    private Label lblSvBrutto;
-    @FXML
-    private Label lblFalschesFormatAbrechnungsmonat;
-    @FXML
-    private Label lblFalschesFormatSvBrutto;
-    @FXML
-    private Label lblMitarbeiternummerEmpty;
-    @FXML
-    private Label lblNameEmpty;
-    @FXML
-    private Label lblFalschesFormatStundenlohn;
-    @FXML
-    private Label lblDateiNichtAkzeptiert;
-    @FXML
-    private Label lblFalscherPathOutput;
-    @FXML
-    private Label lblSchlussnachricht;
+    private Button btnOutputPath;
+
     @FXML
     private CheckBox checkboxErsetzen;
 
-    Boolean excelListClicked = true;
-    Boolean einzelerstellungClicked = false;
+    @FXML
+    private HBox hboxEinzelerstellung;
 
     @FXML
-    protected void chooseFile() {
+    private HBox hboxExcelListeAnsicht;
+
+    @FXML
+    private Label lblAbrechnungsmonat;
+
+    @FXML
+    private Label lblDateiNichtAkzeptiert;
+
+    @FXML
+    private Label lblFalscherPathOutput;
+
+    @FXML
+    private Label lblFalschesFormatAbrechnungsmonat;
+
+    @FXML
+    private Label lblFalschesFormatStundenlohn;
+
+    @FXML
+    private Label lblFalschesFormatSvBrutto;
+
+    @FXML
+    private Label lblInputPath;
+
+    @FXML
+    private Label lblMitarbeiternummer;
+
+    @FXML
+    private Label lblMitarbeiternummerEmpty;
+
+    @FXML
+    private Label lblName;
+
+    @FXML
+    private Label lblNameEmpty;
+
+    @FXML
+    private Label lblOutputPath;
+
+    @FXML
+    private Label lblSchlussnachricht;
+
+    @FXML
+    private Label lblStundenlohn;
+
+    @FXML
+    private Label lblSvBrutto;
+
+    @FXML
+    private TextField textfieldAbrechnungsmonat;
+
+    @FXML
+    private TextField textfieldInputPath;
+
+    @FXML
+    private TextField textfieldMitarbeiternummer;
+
+    @FXML
+    private TextField textfieldName;
+
+    @FXML
+    private TextField textfieldOutputPath;
+
+    @FXML
+    private TextField textfieldStundenlohn;
+
+    @FXML
+    private TextField textfieldSvBrutto;
+
+
+    boolean btnExcelListClicked = true;
+
+    boolean btnEinzelerstellungClicked = false;
+
+
+    @FXML
+    protected void chooseInputFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Datei auswählen");
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
-            inputPathTextField.setText(selectedFile.getAbsolutePath());
+            textfieldInputPath.setText(selectedFile.getAbsolutePath());
         }
     }
 
     @FXML
-    protected void chooseDirectory() {
+    protected void chooseOutputDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Ordner auswählen");
         File selectedDirectory = directoryChooser.showDialog(null);
 
         if (selectedDirectory != null) {
-            outputPathTextField.setText(selectedDirectory.getAbsolutePath());
+            textfieldOutputPath.setText(selectedDirectory.getAbsolutePath());
         }
     }
 
     @FXML
-    public void switchViewExcel() {
+    public void switchToViewExcel() {
         //Muss aus Einzelerstellung ausgeblendet werden
         hboxEinzelerstellung.setVisible(false);
         lblNameEmpty.setVisible(false);
@@ -126,56 +141,55 @@ public class StundenzettelGeneratorController {
         lblSchlussnachricht.setVisible(false);
         lblFalscherPathOutput.setVisible(false);
         lblFalschesFormatStundenlohn.setVisible(false);
-        textFieldStundenlohn.setText("");
-        inputPathTextField.setText("");
+        textfieldStundenlohn.setText("");
+        textfieldInputPath.setText("");
         //Boolean's neu bestimmen
-        einzelerstellungClicked = false;
-        excelListClicked = true;
+        btnEinzelerstellungClicked = false;
+        btnExcelListClicked = true;
     }
 
     @FXML
-    public void switchViewEinzelerstellung() {
+    public void switchToViewEinzelerstellung() {
         hboxExcelListeAnsicht.setVisible(false);
 
         hboxEinzelerstellung.setVisible(true);
-        textFieldMitarbeiternummer.setText("");
-        textFieldAbrechnungsmonat.setText("");
-        textFieldName.setText("");
-        textFieldSvBrutto.setText("");
+        textfieldMitarbeiternummer.setText("");
+        textfieldAbrechnungsmonat.setText("");
+        textfieldName.setText("");
+        textfieldSvBrutto.setText("");
 
-        excelListClicked = false;
-        einzelerstellungClicked = true;
+        btnExcelListClicked = false;
+        btnEinzelerstellungClicked = true;
     }
 
     @FXML
-    protected void btnOkClicked() {
-        if(excelListClicked){
-            if(!isTextfieldFilled(inputPathTextField, lblDateiNichtAkzeptiert, "Leeres Feld")) return;
-            if(!isPathExcelFile(inputPathTextField, lblDateiNichtAkzeptiert, "Der Pfad führt nicht zu einer gültigen Excel-Datei.")) return;
+    protected void btnConfirmClicked() {
+        if(btnExcelListClicked){
+            if(!isTextfieldFilled(textfieldInputPath, lblDateiNichtAkzeptiert, "Leeres Feld")) return;
+            if(!isPathExcelFile(textfieldInputPath, lblDateiNichtAkzeptiert, "Der Pfad führt nicht zu einer gültigen Excel-Datei.")) return;
 
-            isTextfieldFilled(outputPathTextField, lblFalscherPathOutput, "Leeres Feld");
-            isTextfieldFilled(textFieldStundenlohn, lblFalschesFormatStundenlohn, "Leeres Feld");
+//            isTextfieldFilled(textfieldOutputPath, lblFalscherPathOutput, "Leeres Feld");
+//            isTextfieldFilled(textfieldStundenlohn, lblFalschesFormatStundenlohn, "Leeres Feld");
         }
 
-        if(einzelerstellungClicked){
+        if(btnEinzelerstellungClicked){
 
         }
     }
 
     private boolean isTextfieldFilled(TextField field, Label lblErrorMessage, String errorMessage) {
-        if (field.getText().isEmpty()) {
+        if (!field.getText().isEmpty()) {
+            lblErrorMessage.setVisible(false);
+            return true;
+        } else {
             lblErrorMessage.setText(errorMessage);
             lblErrorMessage.setVisible(true);
             return false;
-        } else {
-            lblErrorMessage.setVisible(false);
-            return true;
         }
     }
 
     private boolean isPathExcelFile(TextField field, Label lblErrorMessage, String errorMessage) {
         if(field.getText().endsWith(".xlsx") || field.getText().endsWith(".xlsm") || field.getText().endsWith(".csv")) {
-            lblErrorMessage.setText("Ungültige Eingabe");
             lblErrorMessage.setVisible(false);
             return true;
         } else {

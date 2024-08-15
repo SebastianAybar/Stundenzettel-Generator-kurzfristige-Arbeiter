@@ -7,23 +7,23 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class ApplicationStart extends Application {
-    private int windowWidth = 710;
-    private int windowHeight = 460;
+
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(ApplicationStart.class.getResource("stundenzettelGenrator-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(ApplicationStart.class.getResource("stundenzettelGenerator.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        String css = this.getClass().getResource("styles.css").toExternalForm();
+        String css = Objects.requireNonNull(this.getClass().getResource("styles.css")).toExternalForm();
         scene.getStylesheets().add(css);
         Image image = new Image("/clock.png");
         stage.getIcons().add(image);
-        stage.setTitle("Stundenzettel Generator");
+        stage.setTitle("Stundenzettel Generator für kurzfristige Arbeiter");
         stage.setScene(scene);
         stage.show();
-        stage.setMinWidth(windowWidth);
-        stage.setMinHeight(windowHeight);
+        stage.setMinWidth(Constants.APPLICATION_WINDOW_WIDTH);
+        stage.setMinHeight(Constants.APPLICATION_WINDOW_HEIGHT);
     }
 
     public static void main(String[] args) {

@@ -1,14 +1,25 @@
-package com.example.application;
+package com.demo.application;
 
+import com.demo.helper.Constants;
+import com.demo.helper.Validation;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
 import java.io.File;
 
 public class StundenzettelGeneratorController {
+
+//================================================== VIEW VARIABLES ====================================================
+    @FXML
+    private VBox boxExcelListeInputPath;
+
+    @FXML
+    private VBox boxOutputPath;
+
     @FXML
     private Button btnConfirm;
 
@@ -31,16 +42,10 @@ public class StundenzettelGeneratorController {
     private HBox hboxEinzelerstellung;
 
     @FXML
-    private HBox hboxExcelListeAnsicht;
-
-    @FXML
     private Label lblAbrechnungsmonat;
 
     @FXML
-    private Label lblDateiNichtAkzeptiert;
-
-    @FXML
-    private Label lblFalscherPathOutput;
+    private Label lblValidationOutputPath;
 
     @FXML
     private Label lblFalschesFormatAbrechnungsmonat;
@@ -79,6 +84,9 @@ public class StundenzettelGeneratorController {
     private Label lblSvBrutto;
 
     @FXML
+    private Label lblValidationInputPath;
+
+    @FXML
     private TextField textfieldAbrechnungsmonat;
 
     @FXML
@@ -99,16 +107,17 @@ public class StundenzettelGeneratorController {
     @FXML
     private TextField textfieldSvBrutto;
 
-
+//================================================== CLASS VARIABLES ===================================================
+    // CLASS VARIABLES
     boolean btnExcelListClicked = true;
 
     boolean btnEinzelerstellungClicked = false;
 
-
+//================================================== VIEW METHODS ======================================================
     @FXML
     protected void chooseInputFile() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Datei auswählen");
+        fileChooser.setTitle(Constants.CHOOSER_INPUT_TITLE);
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
@@ -119,7 +128,7 @@ public class StundenzettelGeneratorController {
     @FXML
     protected void chooseOutputDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Ordner auswählen");
+        directoryChooser.setTitle(Constants.CHOOSER_OUTPUT_TITLE);
         File selectedDirectory = directoryChooser.showDialog(null);
 
         if (selectedDirectory != null) {
@@ -136,10 +145,10 @@ public class StundenzettelGeneratorController {
         lblFalschesFormatSvBrutto.setVisible(false);
         lblFalschesFormatAbrechnungsmonat.setVisible(false);
         //Muss in ExcelList angepasst werden
-        hboxExcelListeAnsicht.setVisible(true);
-        lblDateiNichtAkzeptiert.setVisible(false);
+        boxExcelListeInputPath.setVisible(true);
+        lblValidationInputPath.setVisible(false);
         lblSchlussnachricht.setVisible(false);
-        lblFalscherPathOutput.setVisible(false);
+        lblValidationOutputPath.setVisible(false);
         lblFalschesFormatStundenlohn.setVisible(false);
         textfieldStundenlohn.setText("");
         textfieldInputPath.setText("");
@@ -150,7 +159,7 @@ public class StundenzettelGeneratorController {
 
     @FXML
     public void switchToViewEinzelerstellung() {
-        hboxExcelListeAnsicht.setVisible(false);
+        boxExcelListeInputPath.setVisible(false);
 
         hboxEinzelerstellung.setVisible(true);
         textfieldMitarbeiternummer.setText("");
@@ -165,37 +174,19 @@ public class StundenzettelGeneratorController {
     @FXML
     protected void btnConfirmClicked() {
         if(btnExcelListClicked){
-            if(!isTextfieldFilled(textfieldInputPath, lblDateiNichtAkzeptiert, "Leeres Feld")) return;
-            if(!isPathExcelFile(textfieldInputPath, lblDateiNichtAkzeptiert, "Der Pfad führt nicht zu einer gültigen Excel-Datei.")) return;
+            if(!Validation.isTextfieldFilled(textfieldInputPath, lblValidationInputPath, Constants.VALIDATION_EMPTY))
+                return;
+            if(!Validation.isPathExcelFile(textfieldInputPath, lblValidationInputPath, Constants.VALIDATION_WRONG_INPUT_PATH))
+                return;
 
-//            isTextfieldFilled(textfieldOutputPath, lblFalscherPathOutput, "Leeres Feld");
-//            isTextfieldFilled(textfieldStundenlohn, lblFalschesFormatStundenlohn, "Leeres Feld");
+            if (!Validation.isTextfieldFilled(textfieldOutputPath, lblValidationOutputPath, Constants.VALIDATION_EMPTY)) {
+                return;
+            }
+
         }
 
         if(btnEinzelerstellungClicked){
 
-        }
-    }
-
-    private boolean isTextfieldFilled(TextField field, Label lblErrorMessage, String errorMessage) {
-        if (!field.getText().isEmpty()) {
-            lblErrorMessage.setVisible(false);
-            return true;
-        } else {
-            lblErrorMessage.setText(errorMessage);
-            lblErrorMessage.setVisible(true);
-            return false;
-        }
-    }
-
-    private boolean isPathExcelFile(TextField field, Label lblErrorMessage, String errorMessage) {
-        if(field.getText().endsWith(".xlsx") || field.getText().endsWith(".xlsm") || field.getText().endsWith(".csv")) {
-            lblErrorMessage.setVisible(false);
-            return true;
-        } else {
-            lblErrorMessage.setText(errorMessage);
-            lblErrorMessage.setVisible(true);
-            return false;
         }
     }
 }

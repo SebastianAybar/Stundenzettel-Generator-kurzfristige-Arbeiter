@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="415.0" prefWidth="685.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.application.StundenzettelGeneratorController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="415.0" prefWidth="685.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.demo.application.StundenzettelGeneratorController">
   <children>
     <HBox alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="485.0" spacing="10" styleClass="hbox-header" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="136.0" AnchorPane.topAnchor="14.0">
       <children>

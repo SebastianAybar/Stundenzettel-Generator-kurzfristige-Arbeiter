@@ -1,4 +1,4 @@
-module com.example.application {
+module com.demo.application {
     requires javafx.controls;
     requires javafx.fxml;
 
@@ -6,6 +6,8 @@ module com.example.application {
     requires org.kordamp.ikonli.javafx;
     requires de.jensd.fx.glyphs.fontawesome;
 
-    opens com.example.application to javafx.fxml;
-    exports com.example.application;
+    opens com.demo.application to javafx.fxml;
+    exports com.demo.application;
+    exports com.demo.helper;
+    opens com.demo.helper to javafx.fxml;
 }

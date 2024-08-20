@@ -186,7 +186,9 @@ public class StundenzettelGeneratorController {
         }
 
         if(btnEinzelerstellungClicked){
-
+            if (!Validation.isTextfieldFilled(textfieldOutputPath, lblValidationOutputPath, Constants.VALIDATION_EMPTY)) {
+                return;
+            }
         }
     }
 }

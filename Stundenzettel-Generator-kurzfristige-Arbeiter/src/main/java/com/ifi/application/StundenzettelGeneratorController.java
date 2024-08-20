@@ -186,6 +186,9 @@ public class StundenzettelGeneratorController {
         }
 
         if(btnEinzelerstellungClicked){
+            if (!Validation.isTextfieldFilled(textfieldAbrechnungsmonat, lblFalschesFormatAbrechnungsmonat, Constants.VALIDATION_EMPTY)) {
+                return;
+            }
 
         }
     }

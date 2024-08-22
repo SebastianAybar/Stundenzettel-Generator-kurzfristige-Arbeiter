@@ -13,7 +13,7 @@ import java.io.File;
 
 public class StundenzettelGeneratorController {
 
-//================================================== VIEW VARIABLES ====================================================
+    //================================================== VIEW VARIABLES ====================================================
     @FXML
     private VBox boxExcelListeInputPath;
 
@@ -51,7 +51,7 @@ public class StundenzettelGeneratorController {
     private Label lblFalschesFormatAbrechnungsmonat;
 
     @FXML
-    private Label lblFalschesFormatStundenlohn;
+    private Label lblValidationStundenlohn;
 
     @FXML
     private Label lblFalschesFormatSvBrutto;
@@ -107,13 +107,15 @@ public class StundenzettelGeneratorController {
     @FXML
     private TextField textfieldSvBrutto;
 
-//================================================== CLASS VARIABLES ===================================================
+    //================================================== CLASS VARIABLES ===================================================
     // CLASS VARIABLES
-    boolean btnExcelListClicked = true;
+    public boolean btnExcelListeClicked = true;
+
+    private boolean fieldsExcelListeValid;
 
     boolean btnEinzelerstellungClicked = false;
 
-//================================================== VIEW METHODS ======================================================
+    //================================================== VIEW METHODS ======================================================
     @FXML
     protected void chooseInputFile() {
         FileChooser fileChooser = new FileChooser();
@@ -149,12 +151,12 @@ public class StundenzettelGeneratorController {
         lblValidationInputPath.setVisible(false);
         lblSchlussnachricht.setVisible(false);
         lblValidationOutputPath.setVisible(false);
-        lblFalschesFormatStundenlohn.setVisible(false);
+        lblValidationStundenlohn.setVisible(false);
         textfieldStundenlohn.setText("");
         textfieldInputPath.setText("");
         //Boolean's neu bestimmen
         btnEinzelerstellungClicked = false;
-        btnExcelListClicked = true;
+        btnExcelListeClicked = true;
     }
 
     @FXML
@@ -167,25 +169,54 @@ public class StundenzettelGeneratorController {
         textfieldName.setText("");
         textfieldSvBrutto.setText("");
 
-        btnExcelListClicked = false;
+        btnExcelListeClicked = false;
         btnEinzelerstellungClicked = true;
     }
 
     @FXML
     protected void btnConfirmClicked() {
-        if(btnExcelListClicked){
-            if(!Validation.isTextfieldFilled(textfieldInputPath, lblValidationInputPath, Constants.VALIDATION_EMPTY))
-                return;
-            if(!Validation.isPathExcelFile(textfieldInputPath, lblValidationInputPath, Constants.VALIDATION_WRONG_INPUT_PATH))
-                return;
+        if (btnExcelListeClicked) {
+            fieldsExcelListeValid = true;
 
-            if (!Validation.isTextfieldFilled(textfieldOutputPath, lblValidationOutputPath, Constants.VALIDATION_EMPTY)) {
-                return;
+            if (!Validation.isTextfieldFilled(textfieldInputPath)) {
+                Validation.setTextfieldInvalid(textfieldInputPath, lblValidationInputPath, Constants.VALIDATION_EMPTY);
+                fieldsExcelListeValid = false;
+            } else {
+                Validation.setTextfieldValid(textfieldInputPath, lblValidationInputPath);
+
+                if (!Validation.isPathExcelFile(textfieldInputPath)) {
+                    Validation.setTextfieldInvalid(textfieldInputPath, lblValidationInputPath, Constants.VALIDATION_WRONG_INPUT_PATH);
+                    fieldsExcelListeValid = false;
+                } else {
+                    Validation.setTextfieldValid(textfieldInputPath, lblValidationInputPath);
+                }
             }
 
+            if (!Validation.isTextfieldFilled(textfieldOutputPath)) {
+                Validation.setTextfieldInvalid(textfieldOutputPath, lblValidationOutputPath, Constants.VALIDATION_EMPTY);
+                fieldsExcelListeValid = false;
+            } else {
+                Validation.setTextfieldValid(textfieldOutputPath, lblValidationOutputPath);
+            }
+
+            if (!Validation.isTextfieldFilled(textfieldStundenlohn)) {
+                Validation.setTextfieldInvalid(textfieldStundenlohn, lblValidationStundenlohn, Constants.VALIDATION_EMPTY);
+                fieldsExcelListeValid = false;
+            } else {
+                Validation.setTextfieldValid(textfieldStundenlohn, lblValidationStundenlohn);
+
+                if (!Validation.isValidStundenlohn(textfieldStundenlohn)) {
+                    Validation.setTextfieldInvalid(textfieldStundenlohn, lblValidationStundenlohn, Constants.VALIDATION_WRONG_INPUT);
+                    fieldsExcelListeValid = false;
+                } else {
+                    Validation.setTextfieldValid(textfieldStundenlohn, lblValidationStundenlohn);
+                }
+            }
+
+            lblSchlussnachricht.setVisible(fieldsExcelListeValid);
         }
 
-        if(btnEinzelerstellungClicked){
+        if (btnEinzelerstellungClicked) {
 
         }
     }

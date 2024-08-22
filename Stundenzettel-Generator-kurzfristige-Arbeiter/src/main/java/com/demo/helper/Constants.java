@@ -11,6 +11,7 @@ public class Constants {
     public static final String CHOOSER_OUTPUT_TITLE = "Verzeichnis auswählen";
 
     // VALIDATION MESSAGES
+    public static final String VALIDATION_WRONG_INPUT = "Ungültige Eingabe";
     public static final String VALIDATION_EMPTY = "Leeres Feld";
-    public static final String VALIDATION_WRONG_INPUT_PATH = "Der Pfad führt nicht zu einer gültigen Excel-Datei.";
+    public static final String VALIDATION_WRONG_INPUT_PATH = "Der Pfad führt nicht zu einer gültigen Excel-Datei";
 }

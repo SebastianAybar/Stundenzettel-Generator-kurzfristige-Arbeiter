@@ -2,28 +2,49 @@ package com.demo.helper;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.paint.Color;
 
 public class Validation {
 
-    public static boolean isTextfieldFilled(TextField field, Label lblErrorMessage, String errorMessage) {
-        if (!field.getText().isEmpty()) {
-            lblErrorMessage.setVisible(false);
-            return true;
-        } else {
-            lblErrorMessage.setText(errorMessage);
-            lblErrorMessage.setVisible(true);
+    public static boolean isTextfieldFilled(TextField field) {
+        return !field.getText().isEmpty();
+    }
+
+    public static boolean isPathExcelFile(TextField field) {
+        return field.getText().endsWith(".xlsx") || field.getText().endsWith(".xlsm") || field.getText().endsWith(".xls")
+                || field.getText().endsWith(".csv");
+    }
+
+    public static boolean isValidStundenlohn(TextField field) {
+        try {
+            double stundenlohn = Double.parseDouble(field.getText().replace(",", "."));
+
+            return stundenlohn >= 0;
+
+        } catch (NumberFormatException e) {
+            System.out.println("Aus dem Stundenlohn Feld konnte kein gültiger Double entnommen werden.");
+            return false;
+        } catch (NullPointerException e) {
+            System.out.println("Stundenlohn Feld ist NULL.");
             return false;
         }
     }
 
-    public static boolean isPathExcelFile(TextField field, Label lblErrorMessage, String errorMessage) {
-        if(field.getText().endsWith(".xlsx") || field.getText().endsWith(".xlsm") || field.getText().endsWith(".csv")) {
-            lblErrorMessage.setVisible(false);
-            return true;
-        } else {
-            lblErrorMessage.setText(errorMessage);
-            lblErrorMessage.setVisible(true);
-            return false;
-        }
+    public static void setTextfieldValid(TextField field, Label lblErrorMessage) {
+        Border borderValid = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.NONE, null, new BorderWidths(1)));
+        field.setBorder(borderValid);
+        lblErrorMessage.setVisible(false);
     }
+
+    public static void setTextfieldInvalid(TextField field, Label lblErrorMessage, String errorMessage) {
+        Border borderValid = new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, null, new BorderWidths(2)));
+        field.setBorder(borderValid);
+        lblErrorMessage.setText(errorMessage);
+        lblErrorMessage.setVisible(true);
+    }
+
 }

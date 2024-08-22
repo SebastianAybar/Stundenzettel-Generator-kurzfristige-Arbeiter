@@ -13,7 +13,7 @@ import java.io.File;
 
 public class StundenzettelGeneratorController {
 
-    //================================================== VIEW VARIABLES ====================================================
+//================================================== VIEW VARIABLES ====================================================
     @FXML
     private VBox boxExcelListeInputPath;
 
@@ -107,7 +107,7 @@ public class StundenzettelGeneratorController {
     @FXML
     private TextField textfieldSvBrutto;
 
-    //================================================== CLASS VARIABLES ===================================================
+//================================================== CLASS VARIABLES ===================================================
     // CLASS VARIABLES
     public boolean btnExcelListeClicked = true;
 
@@ -115,7 +115,7 @@ public class StundenzettelGeneratorController {
 
     boolean btnEinzelerstellungClicked = false;
 
-    //================================================== VIEW METHODS ======================================================
+//================================================== VIEW METHODS ======================================================
     @FXML
     protected void chooseInputFile() {
         FileChooser fileChooser = new FileChooser();

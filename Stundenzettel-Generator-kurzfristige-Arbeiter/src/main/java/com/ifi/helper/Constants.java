@@ -1,5 +1,7 @@
 package com.demo.helper;
 
+import java.io.File;
+
 public class Constants {
 
     // APPLICATION
@@ -9,6 +11,15 @@ public class Constants {
     // FILE/DIRECTORY CHOOSER
     public static final String CHOOSER_INPUT_TITLE = "Datei auswählen";
     public static final String CHOOSER_OUTPUT_TITLE = "Verzeichnis auswählen";
+
+    // PATHS
+    public static final String HOME_DIRECTORY = System.getProperty("user.home");
+    public static final String DATEI_STUNDENLOHN_NAME = "stundenlohn";
+    public static final String DATEI_STUNDENLOHN_SUFFIX = ".txt";
+    public static final String PATH_DATEI_STUNDENLOHN = HOME_DIRECTORY + File.separator + DATEI_STUNDENLOHN_NAME + DATEI_STUNDENLOHN_SUFFIX;
+
+    // SONSTIGE
+    public static final String DEFAULT_STUNDENLOHN = "12";
 
     // VALIDATION MESSAGES
     public static final String VALIDATION_WRONG_INPUT = "Ungültige Eingabe";

@@ -14,7 +14,7 @@
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="415.0" prefWidth="685.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.demo.application.StundenzettelGeneratorController">
   <children>
-    <HBox alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="485.0" spacing="10" styleClass="hbox-header" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="136.0" AnchorPane.topAnchor="14.0">
+    <HBox alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="647.0" spacing="10" styleClass="hbox-header" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="136.0" AnchorPane.topAnchor="14.0">
       <children>
         <HBox alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="281.0" styleClass="hbox-hbox-header">
           <children>
@@ -165,17 +165,12 @@
         <Separator prefHeight="20.0" prefWidth="446.0" />
             <HBox alignment="CENTER_LEFT" maxHeight="43.0" minHeight="43.0" prefHeight="43.0">
                <children>
-                <Label fx:id="lblSchlussnachricht" text="PDF-Dateien wurden erfolgreich generiert" textAlignment="CENTER" textFill="#00c300" visible="false">
-                  <font>
-                    <Font name="System Bold" size="12.0" />
-                  </font>
-                  </Label>
               <Button fx:id="btnConfirm" alignment="CENTER_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btnConfirmClicked" text="OK">
                 <font>
                   <Font name="Arial Bold" size="12.0" />
                 </font>
                      <HBox.margin>
-                        <Insets left="215.0" />
+                        <Insets left="460.0" />
                      </HBox.margin>
                   </Button>
                </children>
@@ -205,6 +200,12 @@
     <Label fx:id="lblValidationStundenlohn" layoutX="564.0" layoutY="24.0" text="ungültige Eingabe" textFill="#e10000" visible="false">
       <font>
         <Font name="System Italic" size="12.0" />
-      </font></Label>
+      </font>
+      </Label>
+    <Label fx:id="lblSchlussnachricht" layoutX="80.0" layoutY="315.0" prefHeight="18.0" prefWidth="344.0" text="PDF-Dateien wurden erfolgreich generiert" textAlignment="CENTER" textFill="#00c300" visible="false">
+      <font>
+        <Font name="System Bold" size="12.0" />
+      </font>
+      </Label>
   </children>
 </AnchorPane>

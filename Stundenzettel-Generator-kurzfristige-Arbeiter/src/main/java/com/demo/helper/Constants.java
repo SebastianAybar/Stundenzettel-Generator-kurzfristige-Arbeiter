@@ -14,4 +14,6 @@ public class Constants {
     public static final String VALIDATION_WRONG_INPUT = "Ungültige Eingabe";
     public static final String VALIDATION_EMPTY = "Leeres Feld";
     public static final String VALIDATION_WRONG_INPUT_PATH = "Der Pfad führt nicht zu einer gültigen Excel-Datei";
+    public static final String VALIDATION_SUCCESS_PDF = "PDF-Datei(en) wurde(n) erfolgreich generiert";
+    public static final String VALIDATION_FAILED_PDF = "Fehlgeschlagen. Bitte überprüfen Sie Ihre Eingaben";
 }

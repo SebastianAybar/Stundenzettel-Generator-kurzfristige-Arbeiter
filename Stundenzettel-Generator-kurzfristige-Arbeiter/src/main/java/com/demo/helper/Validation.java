@@ -26,10 +26,10 @@ public class Validation {
             return stundenlohn >= 0;
 
         } catch (NumberFormatException e) {
-            System.out.println("Aus dem Stundenlohn Feld konnte kein gültiger Double entnommen werden.");
+            System.out.println("Aus dem Stundenlohn-Feld konnte kein gültiger Double entnommen werden");
             return false;
         } catch (NullPointerException e) {
-            System.out.println("Stundenlohn Feld ist NULL.");
+            System.out.println("Stundenlohn-Feld ist NULL");
             return false;
         }
     }

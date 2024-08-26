@@ -1,8 +1,7 @@
 package com.demo.application;
 
-import com.demo.helper.Constants;
-import com.demo.helper.Validation;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -10,8 +9,14 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class StundenzettelGeneratorController {
+import static com.demo.helper.Constants.*;
+import static com.demo.helper.Utils.*;
+import static com.demo.helper.Validation.*;
+
+public class StundenzettelGeneratorController implements Initializable {
 
 //================================================== VIEW VARIABLES ====================================================
     @FXML
@@ -119,7 +124,7 @@ public class StundenzettelGeneratorController {
     @FXML
     protected void chooseInputFile() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(Constants.CHOOSER_INPUT_TITLE);
+        fileChooser.setTitle(CHOOSER_INPUT_TITLE);
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
@@ -130,7 +135,7 @@ public class StundenzettelGeneratorController {
     @FXML
     protected void chooseOutputDirectory() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle(Constants.CHOOSER_OUTPUT_TITLE);
+        directoryChooser.setTitle(CHOOSER_OUTPUT_TITLE);
         File selectedDirectory = directoryChooser.showDialog(null);
 
         if (selectedDirectory != null) {
@@ -178,54 +183,67 @@ public class StundenzettelGeneratorController {
         if (btnExcelListeClicked) {
             fieldsExcelListeValid = true;
 
-            if (!Validation.isTextfieldFilled(textfieldInputPath)) {
-                Validation.setTextfieldInvalid(textfieldInputPath, lblValidationInputPath, Constants.VALIDATION_EMPTY);
+            // Prüfung Feld Input Path
+            if (!isTextfieldFilled(textfieldInputPath)) {
+                setTextfieldInvalid(textfieldInputPath, lblValidationInputPath, VALIDATION_EMPTY);
                 fieldsExcelListeValid = false;
             } else {
-                Validation.setTextfieldValid(textfieldInputPath, lblValidationInputPath);
+                setTextfieldValid(textfieldInputPath, lblValidationInputPath);
 
-                if (!Validation.isPathExcelFile(textfieldInputPath)) {
-                    Validation.setTextfieldInvalid(textfieldInputPath, lblValidationInputPath, Constants.VALIDATION_WRONG_INPUT_PATH);
+                if (!isPathExcelFile(textfieldInputPath)) {
+                    setTextfieldInvalid(textfieldInputPath, lblValidationInputPath, VALIDATION_WRONG_INPUT_PATH);
                     fieldsExcelListeValid = false;
                 } else {
-                    Validation.setTextfieldValid(textfieldInputPath, lblValidationInputPath);
+                    setTextfieldValid(textfieldInputPath, lblValidationInputPath);
                 }
             }
 
-            if (!Validation.isTextfieldFilled(textfieldOutputPath)) {
-                Validation.setTextfieldInvalid(textfieldOutputPath, lblValidationOutputPath, Constants.VALIDATION_EMPTY);
+            // Prüfung Feld Output Path
+            if (!isTextfieldFilled(textfieldOutputPath)) {
+                setTextfieldInvalid(textfieldOutputPath, lblValidationOutputPath, VALIDATION_EMPTY);
                 fieldsExcelListeValid = false;
             } else {
-                Validation.setTextfieldValid(textfieldOutputPath, lblValidationOutputPath);
+                setTextfieldValid(textfieldOutputPath, lblValidationOutputPath);
             }
 
-            if (!Validation.isTextfieldFilled(textfieldStundenlohn)) {
-                Validation.setTextfieldInvalid(textfieldStundenlohn, lblValidationStundenlohn, Constants.VALIDATION_EMPTY);
+            // Prüfung Feld Stundenlohn
+            if (!isTextfieldFilled(textfieldStundenlohn)) {
+                setTextfieldInvalid(textfieldStundenlohn, lblValidationStundenlohn, VALIDATION_EMPTY);
                 fieldsExcelListeValid = false;
             } else {
-                Validation.setTextfieldValid(textfieldStundenlohn, lblValidationStundenlohn);
+                setTextfieldValid(textfieldStundenlohn, lblValidationStundenlohn);
 
-                if (!Validation.isValidStundenlohn(textfieldStundenlohn)) {
-                    Validation.setTextfieldInvalid(textfieldStundenlohn, lblValidationStundenlohn, Constants.VALIDATION_WRONG_INPUT);
+                if (!isValidStundenlohn(textfieldStundenlohn)) {
+                    setTextfieldInvalid(textfieldStundenlohn, lblValidationStundenlohn, VALIDATION_WRONG_INPUT);
                     fieldsExcelListeValid = false;
                 } else {
-                    Validation.setTextfieldValid(textfieldStundenlohn, lblValidationStundenlohn);
+                    setTextfieldValid(textfieldStundenlohn, lblValidationStundenlohn);
                 }
             }
 
+            // Bei Klick auf Button OK: Prüfung auf alle Felder valid, dann weiter
             if (fieldsExcelListeValid) {
-//                if( alles andere auch passt )
+//                if( alles andere auch passt, dann PDF generieren )
 
-
-                Validation.setMessageSuccess(lblSchlussnachricht, Constants.VALIDATION_SUCCESS_PDF);
+                saveStundenlohnToDatei(textfieldStundenlohn.getText());
+                setMessageSuccess(lblSchlussnachricht, VALIDATION_SUCCESS_PDF);
             } else {
-                Validation.setMessageFailed(lblSchlussnachricht, Constants.VALIDATION_FAILED_PDF);
+                setMessageFailed(lblSchlussnachricht, VALIDATION_FAILED_PDF);
             }
 
         }
+
 
         if (btnEinzelerstellungClicked) {
 
         }
+    }
+
+//================================================== CLASS METHODS =====================================================
+
+    // Alles innerhalb dieser Methode wird direkt nach Programmstart durchgeführt ("implements Initializable" notwendig)
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        loadStundenlohnFromDatei(textfieldStundenlohn);
     }
 }

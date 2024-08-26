@@ -47,4 +47,16 @@ public class Validation {
         lblErrorMessage.setVisible(true);
     }
 
+    public static void setMessageSuccess(Label lblSuccessMessage, String successMessage) {
+        lblSuccessMessage.setText(successMessage);
+        lblSuccessMessage.setTextFill(Color.valueOf("00c300"));
+        lblSuccessMessage.setVisible(true);
+    }
+
+    public static void setMessageFailed(Label lblFailedMessage, String failedMessage) {
+        lblFailedMessage.setText(failedMessage);
+        lblFailedMessage.setTextFill(Color.RED);
+        lblFailedMessage.setVisible(true);
+    }
+
 }

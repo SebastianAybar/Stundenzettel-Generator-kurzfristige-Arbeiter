@@ -213,7 +213,15 @@ public class StundenzettelGeneratorController {
                 }
             }
 
-            lblSchlussnachricht.setVisible(fieldsExcelListeValid);
+            if (fieldsExcelListeValid) {
+//                if( alles andere auch passt )
+
+
+                Validation.setMessageSuccess(lblSchlussnachricht, Constants.VALIDATION_SUCCESS_PDF);
+            } else {
+                Validation.setMessageFailed(lblSchlussnachricht, Constants.VALIDATION_FAILED_PDF);
+            }
+
         }
 
         if (btnEinzelerstellungClicked) {

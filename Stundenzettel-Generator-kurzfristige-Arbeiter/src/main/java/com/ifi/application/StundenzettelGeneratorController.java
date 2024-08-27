@@ -185,7 +185,7 @@ public class StundenzettelGeneratorController implements Initializable {
 
             // Prüfung Feld Input Path
             if (!isTextfieldFilled(textfieldInputPath)) {
-                setTextfieldInvalid(textfieldInputPath, lblValidationInputPath, VALIDATION_EMPTY);
+                setTextfieldInvalid(textfieldInputPath, lblValidationInputPath, VALIDATION_EMPTY_FIELD);
                 fieldsExcelListeValid = false;
             } else {
                 setTextfieldValid(textfieldInputPath, lblValidationInputPath);
@@ -200,7 +200,7 @@ public class StundenzettelGeneratorController implements Initializable {
 
             // Prüfung Feld Output Path
             if (!isTextfieldFilled(textfieldOutputPath)) {
-                setTextfieldInvalid(textfieldOutputPath, lblValidationOutputPath, VALIDATION_EMPTY);
+                setTextfieldInvalid(textfieldOutputPath, lblValidationOutputPath, VALIDATION_EMPTY_FIELD);
                 fieldsExcelListeValid = false;
             } else {
                 setTextfieldValid(textfieldOutputPath, lblValidationOutputPath);
@@ -208,7 +208,7 @@ public class StundenzettelGeneratorController implements Initializable {
 
             // Prüfung Feld Stundenlohn
             if (!isTextfieldFilled(textfieldStundenlohn)) {
-                setTextfieldInvalid(textfieldStundenlohn, lblValidationStundenlohn, VALIDATION_EMPTY);
+                setTextfieldInvalid(textfieldStundenlohn, lblValidationStundenlohn, VALIDATION_EMPTY_FIELD);
                 fieldsExcelListeValid = false;
             } else {
                 setTextfieldValid(textfieldStundenlohn, lblValidationStundenlohn);
@@ -227,6 +227,7 @@ public class StundenzettelGeneratorController implements Initializable {
 
                 saveStundenlohnToDatei(textfieldStundenlohn.getText());
                 setMessageSuccess(lblSchlussnachricht, VALIDATION_SUCCESS_PDF);
+
             } else {
                 setMessageFailed(lblSchlussnachricht, VALIDATION_FAILED_PDF);
             }
@@ -244,6 +245,9 @@ public class StundenzettelGeneratorController implements Initializable {
     // Alles innerhalb dieser Methode wird direkt nach Programmstart durchgeführt ("implements Initializable" notwendig)
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        loadStundenlohnFromDatei(textfieldStundenlohn);
+        createIfNotExistingLocalFileStundenlohn();
+        loadStundenlohnIntoGuiFromDatei(textfieldStundenlohn);
+        createIfNotExistingLocalFileLogo();
+        createIfNotExistingLocalFileStundenzettelVorlage();
     }
 }

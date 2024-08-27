@@ -26,7 +26,7 @@ public class Utils {
                 Files.createFile(pathLocalFileStundenlohn);
                 System.out.println("INFO: Neue lokale Stundenlohn-Datei wurde erstellt in das lokale Verzeichnis: " + PATH_FILE_STUNDENLOHN_LOCAL);
             } catch (Exception e) {
-                System.out.println("ERROR: Lokale Stundenlohn-Datei konnte nicht erstellt werden in Verzeichnis: " + PATH_FILE_STUNDENLOHN_LOCAL);
+                System.out.println("ERROR: Lokale Stundenlohn-Datei konnte nicht erstellt werden im Verzeichnis: " + PATH_FILE_STUNDENLOHN_LOCAL);
             }
         } else {
             System.out.println("INFO: Lokale Stundenlohn-Datei existiert bereits");
@@ -40,7 +40,7 @@ public class Utils {
             stundenlohn = localStundenlohnFileReader.readLine().trim();
             System.out.println("INFO: Stundenlohn >" + stundenlohn + "< wurde aus der lokalen Stundenlohn-Datei gelesen");
         } catch (FileNotFoundException e) {
-            System.err.println("INFO: Lokale Stundenlohn-Datei wurde nicht gefunden in Verzeichnis: " + PATH_FILE_STUNDENLOHN_LOCAL);
+            System.err.println("INFO: Lokale Stundenlohn-Datei wurde nicht gefunden im Verzeichnis: " + PATH_FILE_STUNDENLOHN_LOCAL);
         } catch (IOException e) {
             System.out.println("ERROR: Fehler beim Auslesen des Stundenlohns aus der lokalen Stundenlohn-Datei");
         } catch (NullPointerException e) {
@@ -77,9 +77,9 @@ public class Utils {
                 InputStream fileLogoFromJAR = StundenzettelGeneratorController.class.getResourceAsStream(PATH_FILE_LOGO_JAR);
 
                 if (fileLogoFromJAR == null) {
-                    System.out.println("ERROR: Logo-Datei wurde nicht gefunden in JAR-Verzeichnis: " + PATH_FILE_LOGO_JAR);
+                    System.out.println("ERROR: Logo-Datei wurde nicht gefunden im JAR-Verzeichnis: " + PATH_FILE_LOGO_JAR);
                     return;
-                } else System.out.println("INFO: Logo-Datei wurde gefunden in JAR-Verzeichnis: " + PATH_FILE_LOGO_JAR);
+                } else System.out.println("INFO: Logo-Datei wurde gefunden im JAR-Verzeichnis: " + PATH_FILE_LOGO_JAR);
 
                 // Copy the file from resources to the home directory
                 Files.copy(fileLogoFromJAR, pathLocalFileLogo, StandardCopyOption.REPLACE_EXISTING);
@@ -103,9 +103,9 @@ public class Utils {
                 InputStream fileStundenzettelVorlageFromJAR = StundenzettelGeneratorController.class.getResourceAsStream(PATH_FILE_STUNDENZETTEL_VORLAGE_JAR);
 
                 if (fileStundenzettelVorlageFromJAR == null) {
-                    System.out.println("ERROR: Stundenzettel-Vorlage-Datei wurde nicht gefunden in JAR-Verzeichnis: " + PATH_FILE_STUNDENZETTEL_VORLAGE_JAR);
+                    System.out.println("ERROR: Stundenzettel-Vorlage-Datei wurde nicht gefunden im JAR-Verzeichnis: " + PATH_FILE_STUNDENZETTEL_VORLAGE_JAR);
                     return;
-                } else System.out.println("INFO: Stundenzettel-Vorlage-Datei wurde gefunden in JAR-Verzeichnis: " + PATH_FILE_STUNDENZETTEL_VORLAGE_JAR);
+                } else System.out.println("INFO: Stundenzettel-Vorlage-Datei wurde gefunden im JAR-Verzeichnis: " + PATH_FILE_STUNDENZETTEL_VORLAGE_JAR);
 
                 // Copy the file from resources to the home directory
                 Files.copy(fileStundenzettelVorlageFromJAR, pathLocalFileStundenzettelVorlage, StandardCopyOption.REPLACE_EXISTING);

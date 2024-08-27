@@ -145,13 +145,13 @@ public class StundenzettelGeneratorController implements Initializable {
 
     @FXML
     public void switchToViewExcel() {
-        //Muss aus Einzelerstellung ausgeblendet werden
+        // Elemente der Einzelerstellung-Ansicht werden ausgeblendet
         hboxEinzelerstellung.setVisible(false);
         lblNameEmpty.setVisible(false);
         lblMitarbeiternummerEmpty.setVisible(false);
         lblFalschesFormatSvBrutto.setVisible(false);
         lblFalschesFormatAbrechnungsmonat.setVisible(false);
-        //Muss in ExcelList angepasst werden
+        // Elemente der Excel-Liste-Ansicht werden eingeblendet
         boxExcelListeInputPath.setVisible(true);
         lblValidationInputPath.setVisible(false);
         lblSchlussnachricht.setVisible(false);
@@ -159,7 +159,7 @@ public class StundenzettelGeneratorController implements Initializable {
         lblValidationStundenlohn.setVisible(false);
         textfieldStundenlohn.setText("");
         textfieldInputPath.setText("");
-        //Boolean's neu bestimmen
+        // Boolean-Werte werden umgestellt
         btnEinzelerstellungClicked = false;
         btnExcelListeClicked = true;
     }
@@ -190,7 +190,7 @@ public class StundenzettelGeneratorController implements Initializable {
             } else {
                 setTextfieldValid(textfieldInputPath, lblValidationInputPath);
 
-                if (!isPathExcelFile(textfieldInputPath)) {
+                if (!isPathAnExcelFile(textfieldInputPath)) {
                     setTextfieldInvalid(textfieldInputPath, lblValidationInputPath, VALIDATION_WRONG_INPUT_PATH);
                     fieldsExcelListeValid = false;
                 } else {
@@ -213,7 +213,7 @@ public class StundenzettelGeneratorController implements Initializable {
             } else {
                 setTextfieldValid(textfieldStundenlohn, lblValidationStundenlohn);
 
-                if (!isValidStundenlohn(textfieldStundenlohn)) {
+                if (!isStundenlohnValid(textfieldStundenlohn)) {
                     setTextfieldInvalid(textfieldStundenlohn, lblValidationStundenlohn, VALIDATION_WRONG_INPUT);
                     fieldsExcelListeValid = false;
                 } else {
@@ -225,8 +225,10 @@ public class StundenzettelGeneratorController implements Initializable {
             if (fieldsExcelListeValid) {
 //                if( alles andere auch passt, dann PDF generieren )
 
-                saveStundenlohnToDatei(textfieldStundenlohn.getText());
                 setMessageSuccess(lblSchlussnachricht, VALIDATION_SUCCESS_PDF);
+
+                // (Neuer) Stundenlohn-Wert wird in die lokale Stundenlohn-Datei gespeichert
+                saveStundenlohnToDatei(textfieldStundenlohn.getText());
 
             } else {
                 setMessageFailed(lblSchlussnachricht, VALIDATION_FAILED_PDF);

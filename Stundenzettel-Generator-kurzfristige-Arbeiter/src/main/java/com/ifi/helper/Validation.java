@@ -14,7 +14,7 @@ public class Validation {
         return !field.getText().isEmpty();
     }
 
-    public static boolean isPathExcelFile(TextField field) {
+    public static boolean isPathAnExcelFile(TextField field) {
         return field.getText().endsWith(".xlsx") || field.getText().endsWith(".xlsm") || field.getText().endsWith(".xls")
                 || field.getText().endsWith(".csv");
     }

@@ -8,6 +8,8 @@ import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.paint.Color;
 
+import java.io.File;
+
 public class Validation {
 
     public static boolean isTextfieldFilled(TextField field) {
@@ -19,7 +21,15 @@ public class Validation {
                 || field.getText().endsWith(".csv");
     }
 
-    public static boolean isValidStundenlohn(TextField field) {
+    public static boolean isPathADirectory(TextField field) {
+        File directory = new File(field.getText());
+
+        return directory.exists() && directory.isDirectory();
+        }
+
+
+
+    public static boolean isStundenlohnValid(TextField field) {
         try {
             double stundenlohn = Double.parseDouble(field.getText().replace(",", "."));
 

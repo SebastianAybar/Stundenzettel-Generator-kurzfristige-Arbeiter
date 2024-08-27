@@ -204,6 +204,12 @@ public class StundenzettelGeneratorController implements Initializable {
                 fieldsExcelListeValid = false;
             } else {
                 setTextfieldValid(textfieldOutputPath, lblValidationOutputPath);
+
+                if (!isPathADirectory(textfieldOutputPath)) {
+                    setTextfieldInvalid(textfieldOutputPath, lblValidationOutputPath, VALIDATION_WRONG_OUTPUT_PATH);
+                } else {
+                    setTextfieldValid(textfieldOutputPath, lblValidationOutputPath);
+                }
             }
 
             // Prüfung Feld Stundenlohn

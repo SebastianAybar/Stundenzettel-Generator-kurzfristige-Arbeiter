@@ -12,27 +12,18 @@ import java.io.File;
 
 public class Validation {
 
-    //muss in Validation rein
-    public static boolean isValidDateFormat(String text) {
-        return text.matches("\\d{4}/\\d{2}");
-    }
+
+    // Allgemeine Validierungen
 
     public static boolean isTextfieldFilled(TextField field) {
         return !field.getText().isEmpty();
-    }
-
-    public static boolean isPathAnExcelFile(TextField field) {
-        return field.getText().endsWith(".xlsx") || field.getText().endsWith(".xlsm") || field.getText().endsWith(".xls")
-                || field.getText().endsWith(".csv");
     }
 
     public static boolean isPathADirectory(TextField field) {
         File directory = new File(field.getText());
 
         return directory.exists() && directory.isDirectory();
-        }
-
-
+    }
 
     public static boolean isStundenlohnValid(TextField field) {
         try {
@@ -48,7 +39,6 @@ public class Validation {
             return false;
         }
     }
-
 
     public static void setTextfieldValid(TextField field, Label lblErrorMessage) {
         Border borderValid = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.NONE, null, new BorderWidths(1)));
@@ -74,5 +64,21 @@ public class Validation {
         lblFailedMessage.setTextFill(Color.RED);
         lblFailedMessage.setVisible(true);
     }
+
+
+    // Validierungen für Excel-Liste
+
+    public static boolean isPathAnExcelFile(TextField field) {
+        return field.getText().endsWith(".xlsx") || field.getText().endsWith(".xlsm") || field.getText().endsWith(".xls")
+                || field.getText().endsWith(".csv");
+    }
+
+
+    // Validierungen für Einzelerstellung
+
+    public static boolean isValidDateFormat(String text) {
+        return text.matches("\\d{4}/\\d{2}");
+    }
+
 
 }

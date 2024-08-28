@@ -264,7 +264,7 @@ public class StundenzettelGeneratorController implements Initializable {
 
             // Prüfung Feld Abrechnungsmonat
             if (!isTextfieldFilled(textfieldAbrechnungsmonat)) {
-                setTextfieldInvalid(textfieldAbrechnungsmonat, lblFalschesFormatAbrechnungsmonat, VALIDATION_EMPTY);
+                setTextfieldInvalid(textfieldAbrechnungsmonat, lblFalschesFormatAbrechnungsmonat, VALIDATION_EMPTY_FIELD);
                 fieldsEinzelerstellungValid = false;
             } else {
                 setTextfieldValid(textfieldAbrechnungsmonat, lblFalschesFormatAbrechnungsmonat);
@@ -283,7 +283,7 @@ public class StundenzettelGeneratorController implements Initializable {
             }
             // Prüfung Feld Mitarbeiternummer
             if (!isTextfieldFilled(textfieldMitarbeiternummer)) {
-                setTextfieldInvalid(textfieldMitarbeiternummer, lblMitarbeiternummerEmpty, VALIDATION_EMPTY);
+                setTextfieldInvalid(textfieldMitarbeiternummer, lblMitarbeiternummerEmpty, VALIDATION_EMPTY_FIELD);
                 fieldsEinzelerstellungValid = false;
             } else {
                 setTextfieldValid(textfieldMitarbeiternummer, lblMitarbeiternummerEmpty);
@@ -291,7 +291,7 @@ public class StundenzettelGeneratorController implements Initializable {
 
             // Prüfung Feld Name
             if (!isTextfieldFilled(textfieldName)) {
-                setTextfieldInvalid(textfieldName, lblNameEmpty, VALIDATION_EMPTY);
+                setTextfieldInvalid(textfieldName, lblNameEmpty, VALIDATION_EMPTY_FIELD);
                 fieldsEinzelerstellungValid = false;
             } else {
                 setTextfieldValid(textfieldName, lblNameEmpty);
@@ -299,7 +299,7 @@ public class StundenzettelGeneratorController implements Initializable {
 
             // Prüfung Feld SvBrutto
             if (!isTextfieldFilled(textfieldSvBrutto)) {
-                setTextfieldInvalid(textfieldSvBrutto, lblFalschesFormatSvBrutto, VALIDATION_EMPTY);
+                setTextfieldInvalid(textfieldSvBrutto, lblFalschesFormatSvBrutto, VALIDATION_EMPTY_FIELD);
                 fieldsEinzelerstellungValid = false;
             } else {
                 setTextfieldValid(textfieldSvBrutto, lblFalschesFormatSvBrutto);
@@ -314,12 +314,12 @@ public class StundenzettelGeneratorController implements Initializable {
 
             // Prüfung Feld Output Path
             if (!isTextfieldFilled(textfieldOutputPath)) {
-                setTextfieldInvalid(textfieldOutputPath, lblValidationOutputPath, VALIDATION_EMPTY);
+                setTextfieldInvalid(textfieldOutputPath, lblValidationOutputPath, VALIDATION_EMPTY_FIELD);
                 fieldsExcelListeValid = false;
             } else {
                 setTextfieldValid(textfieldOutputPath, lblValidationOutputPath);
 
-                if (!isPathExcelFile(textfieldOutputPath)) {
+                if (!isPathADirectory(textfieldOutputPath)) {
                     setTextfieldInvalid(textfieldOutputPath, lblValidationOutputPath, VALIDATION_WRONG_OUTPUT_PATH);
                     fieldsEinzelerstellungValid = false;
                 }
@@ -327,12 +327,12 @@ public class StundenzettelGeneratorController implements Initializable {
 
             // Prüfung Feld Stundenlohn
             if (!isTextfieldFilled(textfieldStundenlohn)) {
-                setTextfieldInvalid(textfieldStundenlohn, lblValidationStundenlohn, VALIDATION_EMPTY);
+                setTextfieldInvalid(textfieldStundenlohn, lblValidationStundenlohn, VALIDATION_EMPTY_FIELD);
                 fieldsExcelListeValid = false;
             } else {
                 setTextfieldValid(textfieldStundenlohn, lblValidationStundenlohn);
 
-                if (!isValidStundenlohn(textfieldStundenlohn)) {
+                if (!isStundenlohnValid(textfieldStundenlohn)) {
                     setTextfieldInvalid(textfieldStundenlohn, lblValidationStundenlohn, VALIDATION_WRONG_INPUT);
                     fieldsExcelListeValid = false;
                 } else {

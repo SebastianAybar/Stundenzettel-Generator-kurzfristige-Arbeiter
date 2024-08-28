@@ -249,7 +249,8 @@ public class StundenzettelGeneratorController implements Initializable {
                 System.out.println("INFO: Alle Felder sind gültig.");
 
                 //if( alles andere auch passt, dann Eingabe-Excel-Datei einlesen, Ausgabe-Excel-Datei mit Stundenzettel-Vorlage erstellen und Stundenzettel-PDF generieren )
-
+                ExcelListeReader excelListeReader = new ExcelListeReader(textfieldInputPath.getText());
+                excelListeReader.getListOfAbrechnungsmonate(stundenlohn);
 
                 setMessageSuccess(lblSchlussnachricht, VALIDATION_SUCCESS_PDF);
 

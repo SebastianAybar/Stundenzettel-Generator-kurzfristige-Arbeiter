@@ -8,6 +8,8 @@ import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.paint.Color;
 
+import java.io.File;
+
 public class Validation {
 
     //muss in Validation rein
@@ -19,12 +21,20 @@ public class Validation {
         return !field.getText().isEmpty();
     }
 
-    public static boolean isPathExcelFile(TextField field) {
+    public static boolean isPathAnExcelFile(TextField field) {
         return field.getText().endsWith(".xlsx") || field.getText().endsWith(".xlsm") || field.getText().endsWith(".xls")
                 || field.getText().endsWith(".csv");
     }
 
-    public static boolean isValidStundenlohn(TextField field) {
+    public static boolean isPathADirectory(TextField field) {
+        File directory = new File(field.getText());
+
+        return directory.exists() && directory.isDirectory();
+        }
+
+
+
+    public static boolean isStundenlohnValid(TextField field) {
         try {
             double stundenlohn = Double.parseDouble(field.getText().replace(",", "."));
 

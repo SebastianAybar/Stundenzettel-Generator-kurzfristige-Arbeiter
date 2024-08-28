@@ -10,6 +10,9 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 import static com.demo.helper.Constants.*;
@@ -18,7 +21,7 @@ import static com.demo.helper.Validation.*;
 
 public class StundenzettelGeneratorController implements Initializable {
 
-//================================================== VIEW VARIABLES ====================================================
+    //================================================== VIEW VARIABLES ====================================================
     @FXML
     private VBox boxExcelListeInputPath;
 
@@ -112,15 +115,23 @@ public class StundenzettelGeneratorController implements Initializable {
     @FXML
     private TextField textfieldSvBrutto;
 
-//================================================== CLASS VARIABLES ===================================================
-    // CLASS VARIABLES
+    //================================================== CLASS VARIABLES ===================================================
+
     public boolean btnExcelListeClicked = true;
 
     private boolean fieldsExcelListeValid;
 
     boolean btnEinzelerstellungClicked = false;
 
-//================================================== VIEW METHODS ======================================================
+    private boolean fieldsEinzelerstellungValid;
+
+    double svBrutto;
+
+    double stundenlohn;
+
+    //================================================== VIEW METHODS ======================================================
+
+
     @FXML
     protected void chooseInputFile() {
         FileChooser fileChooser = new FileChooser();
@@ -180,6 +191,11 @@ public class StundenzettelGeneratorController implements Initializable {
 
     @FXML
     protected void btnConfirmClicked() {
+
+        svBrutto = Double.parseDouble(textfieldSvBrutto.getText().replace(",", "."));
+        stundenlohn = Double.parseDouble(textfieldStundenlohn.getText().replace(",", "."));
+
+        // Excel Liste ausgewählt
         if (btnExcelListeClicked) {
             fieldsExcelListeValid = true;
 
@@ -223,7 +239,7 @@ public class StundenzettelGeneratorController implements Initializable {
 
             // Bei Klick auf Button OK: Prüfung auf alle Felder valid, dann weiter
             if (fieldsExcelListeValid) {
-//                if( alles andere auch passt, dann PDF generieren )
+                //if( alles andere auch passt, dann PDF generieren )
 
                 saveStundenlohnToDatei(textfieldStundenlohn.getText());
                 setMessageSuccess(lblSchlussnachricht, VALIDATION_SUCCESS_PDF);
@@ -233,11 +249,107 @@ public class StundenzettelGeneratorController implements Initializable {
 
         }
 
-
+        // Einzelerstellung ausgewählt
         if (btnEinzelerstellungClicked) {
+            fieldsEinzelerstellungValid = true;
 
+            // Prüfung Feld Abrechnungsmonat
+            if (!isTextfieldFilled(textfieldAbrechnungsmonat)) {
+                setTextfieldInvalid(textfieldAbrechnungsmonat, lblFalschesFormatAbrechnungsmonat, VALIDATION_EMPTY);
+                fieldsEinzelerstellungValid = false;
+            } else {
+                setTextfieldValid(textfieldAbrechnungsmonat, lblFalschesFormatAbrechnungsmonat);
+                if (isValidDateFormat(textfieldAbrechnungsmonat.getText())) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM");
+                    YearMonth abrechnungsmonat = YearMonth.parse(textfieldAbrechnungsmonat.getText(), formatter);
+                    if (!(abrechnungsmonat.getYear() <= LocalDate.now().getYear())) {
+                        setTextfieldInvalid(textfieldAbrechnungsmonat, lblFalschesFormatAbrechnungsmonat, VALIDATION_FUTURE_DATE);
+                        textfieldAbrechnungsmonat.setPromptText("Format: &quot;yyyy/MM&quot;");
+                        fieldsEinzelerstellungValid = false;
+                    }
+                } else {
+                    setTextfieldInvalid(textfieldAbrechnungsmonat, lblFalschesFormatAbrechnungsmonat, VALIDATION_WRONG_DATE_FORMAT);
+                    fieldsEinzelerstellungValid = false;
+                }
+            }
+            // Prüfung Feld Mitarbeiternummer
+            if (!isTextfieldFilled(textfieldMitarbeiternummer)) {
+                setTextfieldInvalid(textfieldMitarbeiternummer, lblMitarbeiternummerEmpty, VALIDATION_EMPTY);
+                fieldsEinzelerstellungValid = false;
+            } else {
+                setTextfieldValid(textfieldMitarbeiternummer, lblMitarbeiternummerEmpty);
+            }
+
+            // Prüfung Feld Name
+            if (!isTextfieldFilled(textfieldName)) {
+                setTextfieldInvalid(textfieldName, lblNameEmpty, VALIDATION_EMPTY);
+                fieldsEinzelerstellungValid = false;
+            } else {
+                setTextfieldValid(textfieldName, lblNameEmpty);
+            }
+
+            // Prüfung Feld SvBrutto
+            if (!isTextfieldFilled(textfieldSvBrutto)) {
+                setTextfieldInvalid(textfieldSvBrutto, lblFalschesFormatSvBrutto, VALIDATION_EMPTY);
+                fieldsEinzelerstellungValid = false;
+            } else {
+                setTextfieldValid(textfieldSvBrutto, lblFalschesFormatSvBrutto);
+                try {
+                    if (svBrutto < 0) {
+                        setTextfieldInvalid(textfieldSvBrutto, lblFalschesFormatSvBrutto, VALIDATION_NEGATIVE_SVBRUTTO);
+                    }
+                } catch (NumberFormatException | NullPointerException nfe) {
+                    setTextfieldInvalid(textfieldSvBrutto, lblFalschesFormatSvBrutto, VALIDATION_NO_NUMBER);
+                }
+            }
+
+            // Prüfung Feld Output Path
+            if (!isTextfieldFilled(textfieldOutputPath)) {
+                setTextfieldInvalid(textfieldOutputPath, lblValidationOutputPath, VALIDATION_EMPTY);
+                fieldsExcelListeValid = false;
+            } else {
+                setTextfieldValid(textfieldOutputPath, lblValidationOutputPath);
+
+                if (!isPathExcelFile(textfieldOutputPath)) {
+                    setTextfieldInvalid(textfieldOutputPath, lblValidationOutputPath, VALIDATION_WRONG_OUTPUT_PATH);
+                    fieldsEinzelerstellungValid = false;
+                }
+            }
+
+            // Prüfung Feld Stundenlohn
+            if (!isTextfieldFilled(textfieldStundenlohn)) {
+                setTextfieldInvalid(textfieldStundenlohn, lblValidationStundenlohn, VALIDATION_EMPTY);
+                fieldsExcelListeValid = false;
+            } else {
+                setTextfieldValid(textfieldStundenlohn, lblValidationStundenlohn);
+
+                if (!isValidStundenlohn(textfieldStundenlohn)) {
+                    setTextfieldInvalid(textfieldStundenlohn, lblValidationStundenlohn, VALIDATION_WRONG_INPUT);
+                    fieldsExcelListeValid = false;
+                } else {
+                    setTextfieldValid(textfieldStundenlohn, lblValidationStundenlohn);
+                }
+            }
         }
+
+        //Wenn alles geklappt hat
+        if (fieldsEinzelerstellungValid) {
+
+            if (svBrutto >= stundenlohn) {
+
+                saveStundenlohnToDatei(textfieldStundenlohn.getText());
+                setMessageSuccess(lblSchlussnachricht, VALIDATION_SUCCESS_PDF);
+
+                Einzelerstellung einzelerstellung = new Einzelerstellung(textfieldAbrechnungsmonat.getText(), textfieldMitarbeiternummer.getText(), textfieldSvBrutto.getText(), textfieldName.getText());
+                einzelerstellung.writeToExcel(textfieldOutputPath.getText(), textfieldStundenlohn.getText(), checkboxErsetzen.isSelected());
+
+            }
+        } else {
+            setMessageFailed(lblSchlussnachricht, VALIDATION_FAILED_PDF);
+        }
+
     }
+
 
 //================================================== CLASS METHODS =====================================================
 

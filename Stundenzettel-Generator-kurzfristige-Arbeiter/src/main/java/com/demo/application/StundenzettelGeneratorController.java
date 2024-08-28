@@ -192,12 +192,12 @@ public class StundenzettelGeneratorController implements Initializable {
     @FXML
     protected void btnConfirmClicked() {
 
-        svBrutto = Double.parseDouble(textfieldSvBrutto.getText().replace(",", "."));
         stundenlohn = Double.parseDouble(textfieldStundenlohn.getText().replace(",", "."));
 
         // Excel Liste ausgewählt
         if (btnExcelListeClicked) {
             fieldsExcelListeValid = true;
+            fieldsEinzelerstellungValid = false;
 
             // Prüfung Feld Input Path
             if (!isTextfieldFilled(textfieldInputPath)) {
@@ -223,6 +223,7 @@ public class StundenzettelGeneratorController implements Initializable {
 
                 if (!isPathADirectory(textfieldOutputPath)) {
                     setTextfieldInvalid(textfieldOutputPath, lblValidationOutputPath, VALIDATION_WRONG_OUTPUT_PATH);
+                    fieldsExcelListeValid = false;
                 } else {
                     setTextfieldValid(textfieldOutputPath, lblValidationOutputPath);
                 }
@@ -243,9 +244,12 @@ public class StundenzettelGeneratorController implements Initializable {
                 }
             }
 
-            // Bei Klick auf Button OK: Prüfung auf alle Felder valid, dann weiter
+            // Bei Klick auf Button OK: Wenn alle Felder gültig, dann weiter
             if (fieldsExcelListeValid) {
-                //if( alles andere auch passt, dann PDF generieren )
+                System.out.println("INFO: Alle Felder sind gültig.");
+
+                //if( alles andere auch passt, dann Eingabe-Excel-Datei einlesen, Ausgabe-Excel-Datei mit Stundenzettel-Vorlage erstellen und Stundenzettel-PDF generieren )
+
 
                 setMessageSuccess(lblSchlussnachricht, VALIDATION_SUCCESS_PDF);
 
@@ -253,6 +257,7 @@ public class StundenzettelGeneratorController implements Initializable {
                 saveStundenlohnToDatei(textfieldStundenlohn.getText());
 
             } else {
+                System.out.println("INFO: Nicht alle Felder sind gültig. Felder prüfen.");
                 setMessageFailed(lblSchlussnachricht, VALIDATION_FAILED_PDF);
             }
 
@@ -261,6 +266,8 @@ public class StundenzettelGeneratorController implements Initializable {
         // Einzelerstellung ausgewählt
         if (btnEinzelerstellungClicked) {
             fieldsEinzelerstellungValid = true;
+
+            svBrutto = Double.parseDouble(textfieldSvBrutto.getText().replace(",", "."));
 
             // Prüfung Feld Abrechnungsmonat
             if (!isTextfieldFilled(textfieldAbrechnungsmonat)) {
@@ -339,23 +346,25 @@ public class StundenzettelGeneratorController implements Initializable {
                     setTextfieldValid(textfieldStundenlohn, lblValidationStundenlohn);
                 }
             }
-        }
 
-        //Wenn alles geklappt hat
-        if (fieldsEinzelerstellungValid) {
+            //Wenn alles geklappt hat
+            if (fieldsEinzelerstellungValid) {
 
-            if (svBrutto >= stundenlohn) {
+                if (svBrutto >= stundenlohn) {
 
-                saveStundenlohnToDatei(textfieldStundenlohn.getText());
-                setMessageSuccess(lblSchlussnachricht, VALIDATION_SUCCESS_PDF);
+                    saveStundenlohnToDatei(textfieldStundenlohn.getText());
+                    setMessageSuccess(lblSchlussnachricht, VALIDATION_SUCCESS_PDF);
 
-                Einzelerstellung einzelerstellung = new Einzelerstellung(textfieldAbrechnungsmonat.getText(), textfieldMitarbeiternummer.getText(), textfieldSvBrutto.getText(), textfieldName.getText());
-                einzelerstellung.writeToExcel(textfieldOutputPath.getText(), textfieldStundenlohn.getText(), checkboxErsetzen.isSelected());
+                    Einzelerstellung einzelerstellung = new Einzelerstellung(textfieldAbrechnungsmonat.getText(), textfieldMitarbeiternummer.getText(), textfieldSvBrutto.getText(), textfieldName.getText());
+                    einzelerstellung.writeToExcel(textfieldOutputPath.getText(), textfieldStundenlohn.getText(), checkboxErsetzen.isSelected());
 
+                }
+            } else {
+                setMessageFailed(lblSchlussnachricht, VALIDATION_FAILED_PDF);
             }
-        } else {
-            setMessageFailed(lblSchlussnachricht, VALIDATION_FAILED_PDF);
+
         }
+
 
     }
 

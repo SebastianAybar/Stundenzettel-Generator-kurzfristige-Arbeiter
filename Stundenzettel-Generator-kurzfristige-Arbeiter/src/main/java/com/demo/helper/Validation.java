@@ -10,6 +10,11 @@ import javafx.scene.paint.Color;
 
 public class Validation {
 
+    //muss in Validation rein
+    public static boolean isValidDateFormat(String text) {
+        return text.matches("\\d{4}/\\d{2}");
+    }
+
     public static boolean isTextfieldFilled(TextField field) {
         return !field.getText().isEmpty();
     }
@@ -33,6 +38,7 @@ public class Validation {
             return false;
         }
     }
+
 
     public static void setTextfieldValid(TextField field, Label lblErrorMessage) {
         Border borderValid = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.NONE, null, new BorderWidths(1)));

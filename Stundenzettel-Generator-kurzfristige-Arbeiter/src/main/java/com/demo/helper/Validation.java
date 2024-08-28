@@ -73,6 +73,15 @@ public class Validation {
                 || field.getText().endsWith(".csv");
     }
 
+    public static boolean isSvBruttoValid(String svBrutto) {
+        try {
+            Double.parseDouble(svBrutto);
+        } catch (NumberFormatException | NullPointerException e) {
+            return false;
+        }
+        return true;
+    }
+
 
     // Validierungen für Einzelerstellung
 

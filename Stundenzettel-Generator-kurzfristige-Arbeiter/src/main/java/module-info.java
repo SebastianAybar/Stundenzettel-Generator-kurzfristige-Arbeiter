@@ -5,6 +5,7 @@ module com.demo.application {
     requires org.controlsfx.controls;
     requires org.kordamp.ikonli.javafx;
     requires de.jensd.fx.glyphs.fontawesome;
+    requires org.apache.poi.poi;
 
     opens com.demo.application to javafx.fxml;
     exports com.demo.application;

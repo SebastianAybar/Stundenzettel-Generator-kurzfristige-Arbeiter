@@ -16,11 +16,11 @@ import static com.demo.helper.Constants.PATH_FILE_STUNDENZETTEL_VORLAGE_LOCAL;
 import static com.demo.helper.Utils.*;
 import static com.demo.helper.Validation.displayErrorInGui;
 
-public class ExcelWriter {
+public class ExcelListeWriter {
 
     private final String outputPath;
 
-    public ExcelWriter(String outputPath) {
+    public ExcelListeWriter(String outputPath) {
         this.outputPath = outputPath;
     }
 
@@ -236,9 +236,9 @@ public class ExcelWriter {
                     workbook.write(fileOutputStream);
                 }
 
-                // PDF-Output-Dateien
-//                PdfGenerator pdfGenerator = new PdfGenerator();
-//                pdfGenerator.createPdf(workbook, outputPath, monatsliste.get(0).getAbrechnungsmonat().replace("/", "-"));
+                // PDF-Output-Dateien generieren
+                PdfGenerator pdfGenerator = new PdfGenerator();
+                pdfGenerator.createPdf(workbook, outputPath, monatsliste.get(0).getAbrechnungsmonat().replace("/", "-"));
 
 
             } catch (Exception e) {

@@ -257,8 +257,8 @@ public class StundenzettelGeneratorController implements Initializable {
                 excelListeReader.printJahresliste(jahresliste);
                 System.out.println("INFO: Excel-Datei wurde erfolgreich eingelesen. Mitarbeiter-Objekte wurden erstellt");
 
-                ExcelWriter excelWriter = new ExcelWriter(textfieldOutputPath.getText());
-                excelWriter.writeToExcel(jahresliste, stundenlohn);
+                ExcelListeWriter excelListeWriter = new ExcelListeWriter(textfieldOutputPath.getText());
+                excelListeWriter.writeToExcel(jahresliste, stundenlohn);
 
                 setMessageSuccess(lblSchlussnachricht, VALIDATION_SUCCESS_PDF);
 

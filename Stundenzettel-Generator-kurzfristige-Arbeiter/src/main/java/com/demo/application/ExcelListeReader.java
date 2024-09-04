@@ -61,11 +61,10 @@ public class ExcelListeReader {
     }
 
     public void readAllRows(Double stundenlohn) {
-        System.out.println("Path: " + pathInput);
         try (FileInputStream inputStream = new FileInputStream(pathInput)) {
             Workbook excelFile = WorkbookFactory.create(inputStream);
             Sheet excelSheet = excelFile.getSheetAt(0);
-            System.out.println("INFO: Workbook-Objekt wurde erfolgreich erstellt");
+            System.out.println("INFO: Workbook-Objekt wurde erfolgreich erstellt aus der Datei: " + pathInput);
             listMitarbeiterMonat = new ArrayList<>();
 
             for (Row row : excelSheet) {
@@ -126,6 +125,20 @@ public class ExcelListeReader {
     public void printMonatsliste(List<MitarbeiterMonat> list) {
         for (MitarbeiterMonat mitarbeiterMonat : list) {
             System.out.println(mitarbeiterMonat.toString());
+        }
+    }
+
+    public void printList(List<MitarbeiterMonat> list) {
+        for (MitarbeiterMonat mitarbeiterMonat : list) {
+            System.out.println(mitarbeiterMonat.toString());
+        }
+    }
+
+    public void printJahresliste(List<List<MitarbeiterMonat>> lists) {
+        System.out.println("Jahresliste (alle erfassten Mitarbeiter):");
+        for (List<MitarbeiterMonat> list : lists) {
+            printList(list);
+            System.out.println();
         }
     }
 

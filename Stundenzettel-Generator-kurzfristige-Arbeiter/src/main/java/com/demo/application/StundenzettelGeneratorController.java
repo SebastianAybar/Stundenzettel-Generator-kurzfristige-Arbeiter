@@ -13,6 +13,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import static com.demo.helper.Constants.*;
@@ -247,11 +248,16 @@ public class StundenzettelGeneratorController implements Initializable {
 
             // Bei Klick auf Button OK: Wenn alle Felder gültig, dann weiter
             if (fieldsExcelListeValid) {
-                System.out.println("INFO: Alle Felder sind gültig.");
+                System.out.println("INFO: Alle Felder sind gültig. Excel-Datei wird eingelesen...");
 
                 //if( alles andere auch passt, dann Eingabe-Excel-Datei einlesen, Ausgabe-Excel-Datei mit Stundenzettel-Vorlage erstellen und Stundenzettel-PDF generieren )
                 ExcelListeReader excelListeReader = new ExcelListeReader(textfieldInputPath.getText());
-                excelListeReader.getListOfAbrechnungsmonate(stundenlohn);
+                List<List<MitarbeiterMonat>> jahresliste = excelListeReader.getListOfAbrechnungsmonate(stundenlohn);
+
+                excelListeReader.printJahresliste(jahresliste);
+                System.out.println("INFO: Excel-Datei wurde erfolgreich eingelesen. Mitarbeiter-Objekte wurden erstellt");
+
+
 
                 setMessageSuccess(lblSchlussnachricht, VALIDATION_SUCCESS_PDF);
 

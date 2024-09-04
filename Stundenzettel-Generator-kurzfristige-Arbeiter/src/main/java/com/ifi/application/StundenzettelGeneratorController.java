@@ -208,6 +208,7 @@ public class StundenzettelGeneratorController implements Initializable {
 
                 if (!isPathAnExcelFile(textfieldInputPath)) {
                     setTextfieldInvalid(textfieldInputPath, lblValidationInputPath, VALIDATION_WRONG_INPUT_PATH);
+                    System.out.println("ERROR: " + VALIDATION_WRONG_INPUT_PATH);
                     fieldsExcelListeValid = false;
                 } else {
                     setTextfieldValid(textfieldInputPath, lblValidationInputPath);
@@ -379,5 +380,8 @@ public class StundenzettelGeneratorController implements Initializable {
         loadStundenlohnIntoGuiFromDatei(textfieldStundenlohn);
         createIfNotExistingLocalFileLogo();
         createIfNotExistingLocalFileStundenzettelVorlage();
+
+        textfieldInputPath.setText("C:\\Users\\MM\\Desktop\\neue_excel_kurzarbeiter\\KFB_0124.xlsx");
+        textfieldOutputPath.setText("C:\\Users\\MM\\Downloads");
     }
 }

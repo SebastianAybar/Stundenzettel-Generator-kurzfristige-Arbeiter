@@ -6,6 +6,9 @@ module com.demo.application {
     requires org.kordamp.ikonli.javafx;
     requires de.jensd.fx.glyphs.fontawesome;
     requires org.apache.poi.poi;
+    requires de.focus_shift.jollyday.core;
+    requires de.focus_shift.jollyday.jaxb;
+    requires commons.math3;
 
     opens com.demo.application to javafx.fxml;
     exports com.demo.application;

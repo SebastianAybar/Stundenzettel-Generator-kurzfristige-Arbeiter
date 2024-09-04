@@ -1,5 +1,6 @@
 package com.demo.helper;
 
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Border;
@@ -14,6 +15,7 @@ import java.io.FileNotFoundException;
 
 public class Validation {
 
+    public static boolean errorDisplayed = false;
 
     // Allgemeine Validierungen
 
@@ -67,6 +69,14 @@ public class Validation {
         lblFailedMessage.setVisible(true);
     }
 
+    public static void displayErrorInGui(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Hinweis");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+        errorDisplayed = true;
+    }
 
     // Validierungen für Excel-Liste
 

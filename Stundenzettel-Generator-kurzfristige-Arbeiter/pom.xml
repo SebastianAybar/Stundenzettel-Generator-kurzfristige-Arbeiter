@@ -63,6 +63,18 @@
             <artifactId>poi-ooxml</artifactId>
             <version>5.3.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/de.focus-shift/jollyday-core -->
+        <dependency>
+            <groupId>de.focus-shift</groupId>
+            <artifactId>jollyday-core</artifactId>
+            <version>0.23.2</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/de.focus-shift/jollyday-jaxb -->
+        <dependency>
+            <groupId>de.focus-shift</groupId>
+            <artifactId>jollyday-jaxb</artifactId>
+            <version>0.23.2</version>
+        </dependency>
     </dependencies>
 
     <build>

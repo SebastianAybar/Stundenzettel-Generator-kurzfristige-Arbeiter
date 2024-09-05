@@ -57,6 +57,35 @@
             <artifactId>poi</artifactId>
             <version>5.2.5</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.3.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/de.focus-shift/jollyday-core -->
+        <dependency>
+            <groupId>de.focus-shift</groupId>
+            <artifactId>jollyday-core</artifactId>
+            <version>0.23.2</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/de.focus-shift/jollyday-jaxb -->
+        <dependency>
+            <groupId>de.focus-shift</groupId>
+            <artifactId>jollyday-jaxb</artifactId>
+            <version>0.23.2</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.itextpdf/itextpdf -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itextpdf</artifactId>
+            <version>5.5.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>3.0.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -94,4 +123,11 @@
             </plugin>
         </plugins>
     </build>
+    <repositories>
+        <repository>
+            <id>maven_central</id>
+            <name>Maven Central</name>
+            <url>https://repo.maven.apache.org/maven2/</url>
+        </repository>
+    </repositories>
 </project>

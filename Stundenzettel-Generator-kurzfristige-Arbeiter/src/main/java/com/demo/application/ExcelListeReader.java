@@ -3,6 +3,7 @@ package com.demo.application;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -13,7 +14,8 @@ import static com.demo.helper.Validation.isSvBruttoValid;
 public class ExcelListeReader {
 
     private final String pathInput;
-    List<MitarbeiterMonat> listMitarbeiterMonat;
+    private List<MitarbeiterMonat> listMitarbeiterMonat;
+    private boolean isAllRowsRead;
 
     public ExcelListeReader(String pathInput) {
         this.pathInput = pathInput;
@@ -21,41 +23,48 @@ public class ExcelListeReader {
     }
 
     public List<List<MitarbeiterMonat>> getListOfAbrechnungsmonate(Double stundenlohn) {
+        isAllRowsRead = false;
         readAllRows(stundenlohn);
 
-        // Wenn in der Excel keine Personen mit Gehalt existieren, bleibt die Liste leer.
-        // Es werden also keine PDF-Dateien erstellt
+        if (isAllRowsRead) {
+            System.out.println("INFO: Alle gültigen Zeilen wurden erfolgreich eingelesen");
 
-        orderByAbrechnungsmonat(listMitarbeiterMonat);
+            // Wenn in der Excel keine Personen mit Gehalt existieren, bleibt die Liste leer.
+            // Es werden also keine PDF-Dateien erstellt
 
-        List<List<MitarbeiterMonat>> jahresliste = new ArrayList<>();
+            orderByAbrechnungsmonat(listMitarbeiterMonat);
 
-        List<MitarbeiterMonat> monatsliste = new ArrayList<>();
-        String monat = listMitarbeiterMonat.get(0).getAbrechnungsmonat();
+            List<List<MitarbeiterMonat>> jahresliste = new ArrayList<>();
 
-        for (MitarbeiterMonat row : listMitarbeiterMonat) {
-            if (row.getAbrechnungsmonat().equals(monat)) {
-                monatsliste.add(row);
-            } else {
-                jahresliste.add(monatsliste);
-                monatsliste = new ArrayList<>();
-                monat = row.getAbrechnungsmonat();
-                monatsliste.add(row);
+            List<MitarbeiterMonat> monatsliste = new ArrayList<>();
+            String monat = listMitarbeiterMonat.get(0).getAbrechnungsmonat();
 
-                printMonatsliste(monatsliste);
+            for (MitarbeiterMonat row : listMitarbeiterMonat) {
+                if (row.getAbrechnungsmonat().equals(monat)) {
+                    monatsliste.add(row);
+                } else {
+                    jahresliste.add(monatsliste);
+                    monatsliste = new ArrayList<>();
+                    monat = row.getAbrechnungsmonat();
+                    monatsliste.add(row);
+
+                    printMonatsliste(monatsliste);
+                }
             }
-        }
-        jahresliste.add(monatsliste);
+            jahresliste.add(monatsliste);
 
-        return jahresliste;
+            return jahresliste;
+        } else {
+            System.out.println("ERROR: isAllRowsRead is false");
+            return new ArrayList<>();
+        }
     }
 
     public void readAllRows(Double stundenlohn) {
-        System.out.println("Path: " + pathInput);
         try (FileInputStream inputStream = new FileInputStream(pathInput)) {
             Workbook excelFile = WorkbookFactory.create(inputStream);
             Sheet excelSheet = excelFile.getSheetAt(0);
-            System.out.println("Workbook erstellt");
+            System.out.println("INFO: Workbook-Objekt wurde erfolgreich erstellt aus der Datei: " + pathInput);
             listMitarbeiterMonat = new ArrayList<>();
 
             for (Row row : excelSheet) {
@@ -73,21 +82,29 @@ public class ExcelListeReader {
                 mitarbeiterMonat.setArbeitszeit(getCellAsString(row.getCell(9)));
 
                 if (!isSvBruttoValid(mitarbeiterMonat.getSvBrutto())) {
-                    System.out.println("INFO: Die aktuelle Zeile enthält keinen gültigen SvBrutto-Wert. Die Zeile wird übersprungen");
+                    System.out.println("WARNING: Die aktuelle Zeile enthält keinen gültigen SvBrutto-Wert. Die Zeile wird übersprungen");
                 } else {
                     if (Double.parseDouble(mitarbeiterMonat.getSvBrutto()) >= stundenlohn) {
                         listMitarbeiterMonat.add(mitarbeiterMonat);
-                        System.out.println("INFO: SV-Brutto ist größer als Stundenlohn. Person >" + mitarbeiterMonat.getNachnameVorname() + "< wird hinzugefügt");
+                        System.out.println("INFO: Zeile ist gültig. Person >" + mitarbeiterMonat.getNachnameVorname() + "< wird hinzugefügt");
                     } else {
-                        System.out.println("INFO: SV-Brutto ist nicht größer als Stundenlohn. Person >" + mitarbeiterMonat.getNachnameVorname() + "< wird übersprungen");
+                        System.out.println("WARNING: Der SV-Brutto dieser Zeile ist nicht größer als der Stundenlohn. Person >" + mitarbeiterMonat.getNachnameVorname() + "< wird übersprungen");
                     }
                 }
             }
 
             excelFile.close();
 
+            isAllRowsRead = true;
+        } catch (FileNotFoundException e) {
+            isAllRowsRead = false;
+            System.err.println("Diese Meldung sollte nie angezeigt werden, da dieser Fall bereits durch die Validierung-Methode isPathAnExcelFile() abgefangen wird");
+        } catch (IndexOutOfBoundsException e) {
+            isAllRowsRead = false;
+            System.out.println("ERROR: Fehler outofbounds");
         } catch (IOException e) {
-            System.out.println("Error. Check code!");
+            isAllRowsRead = false;
+            System.out.println("Error. Check code! (1): " + e);
         }
     }
 
@@ -108,6 +125,20 @@ public class ExcelListeReader {
     public void printMonatsliste(List<MitarbeiterMonat> list) {
         for (MitarbeiterMonat mitarbeiterMonat : list) {
             System.out.println(mitarbeiterMonat.toString());
+        }
+    }
+
+    public void printList(List<MitarbeiterMonat> list) {
+        for (MitarbeiterMonat mitarbeiterMonat : list) {
+            System.out.println(mitarbeiterMonat.toString());
+        }
+    }
+
+    public void printJahresliste(List<List<MitarbeiterMonat>> lists) {
+        System.out.println("Jahresliste (alle erfassten Mitarbeiter):");
+        for (List<MitarbeiterMonat> list : lists) {
+            printList(list);
+            System.out.println();
         }
     }
 

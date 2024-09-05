@@ -1,15 +1,28 @@
 package com.demo.helper;
 
 import com.demo.application.StundenzettelGeneratorController;
+import de.focus_shift.jollyday.core.Holiday;
+import de.focus_shift.jollyday.core.HolidayManager;
+import de.focus_shift.jollyday.core.ManagerParameters;
 import javafx.scene.control.TextField;
+import org.apache.commons.math3.distribution.NormalDistribution;
+import org.apache.poi.ss.usermodel.*;
+
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import static com.demo.helper.Constants.*;
+import static java.util.Locale.GERMANY;
 
 // Diese Klasse enthält "sonstige" Klassen, die nicht woanders eingeordnet werden können, aber notwendig sind
 // Utils = Utility (Nützlichkeit)
@@ -118,4 +131,105 @@ public class Utils {
         }
 
     }
+
+    // Gibt eine Liste mit allen Tagen des bestimmten Monats zurück
+    public static List<LocalDate> getAlleTageDesMonats(String[] datum) {
+        YearMonth jahrMonat = YearMonth.of(Integer.parseInt(datum[0]), Integer.parseInt(datum[1]));
+        int anzahlTageImMonat = jahrMonat.lengthOfMonth();
+        LocalDate ersterTag = jahrMonat.atDay(1);
+        List<LocalDate> datenDesMonats = new ArrayList<>();
+        for (int j = 0; j < anzahlTageImMonat; j++) {
+            LocalDate aktuellesDatum = ersterTag.plusDays(j);
+            datenDesMonats.add(aktuellesDatum);
+        }
+        return datenDesMonats;
+    }
+
+    // Prüft, ob das angegebene Datum ein Feiertag ist (mithilfe der Library <jollyday>)
+    public static boolean isDatumEinFeiertag(LocalDate datum, int jahr) {
+        final String BUNDESLAND = "he";
+        final HolidayManager feiertageManager = HolidayManager.getInstance(ManagerParameters.create(GERMANY));
+        final Set<Holiday> feiertage = feiertageManager.getHolidays(jahr, BUNDESLAND);
+        for (Holiday feiertag : feiertage) {
+            if (feiertag.getDate().toString().equals(datum.toString())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Row als freien Tag (Sonn- und Feiertage) markieren (-2, -1, +2, +3, +4, +5 um KW, Wochentag, etc. anzusprechen)
+    public static void markiereRowAlsFreienTag(Workbook workbook, Row row, Cell cell) {
+        // Zellen leeren
+        Cell kwCell = cell.getRow().getCell(cell.getColumnIndex() - 2);
+
+        Cell wochentagCell = cell.getRow().getCell(cell.getColumnIndex() - 1);
+
+        Cell arbeitszeitCell = cell.getRow().getCell(cell.getColumnIndex() + 1);
+        arbeitszeitCell.setCellValue("");
+
+        Cell dezimalCell = cell.getRow().getCell(cell.getColumnIndex() + 2);
+        dezimalCell.setCellValue("");
+
+        Cell arbeitszeitNettoCell = cell.getRow().getCell(cell.getColumnIndex() + 3);
+        arbeitszeitNettoCell.removeFormula();
+        arbeitszeitNettoCell.setCellValue("");
+
+        Cell aufgezeichnetAmCell = cell.getRow().getCell(cell.getColumnIndex() + 4);
+        aufgezeichnetAmCell.setCellValue("");
+
+        // Zellen färben
+        CellStyle originalStyle = cell.getCellStyle();
+        CellStyle freierTagStyle = workbook.createCellStyle();
+        CellStyle freierTagStyleFuerDatum = workbook.createCellStyle();
+        freierTagStyle.cloneStyleFrom(originalStyle);
+
+        freierTagStyle.setFillPattern(FillPatternType.BRICKS);
+        freierTagStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        freierTagStyle.setBorderBottom(BorderStyle.THIN);
+        freierTagStyle.setBorderLeft(BorderStyle.THIN);
+        freierTagStyle.setBorderRight(BorderStyle.THIN);
+        freierTagStyle.setBorderTop(BorderStyle.THIN);
+
+        freierTagStyleFuerDatum.cloneStyleFrom(freierTagStyle);
+
+        freierTagStyle.setDataFormat((short) BuiltinFormats.getBuiltinFormat("General"));
+
+        // Feld: KW
+        kwCell.setCellStyle(freierTagStyle);
+
+        // Feld: Wochentag
+        wochentagCell.setCellStyle(freierTagStyle);
+
+        // Feld: Datum
+        cell.setCellStyle(freierTagStyleFuerDatum);
+
+        // Feld: Arbeitszeit
+        arbeitszeitCell.setCellStyle(freierTagStyle);
+
+        // Feld: Dezimal
+        dezimalCell.setCellStyle(freierTagStyle);
+
+        // Feld: Arbeitszeit netto
+        arbeitszeitNettoCell.setCellStyle(freierTagStyle);
+
+        // Feld: Aufgezeichnet am
+        aufgezeichnetAmCell.setCellStyle(freierTagStyle);
+    }
+
+    public static double[] generateRandomNumbers(int numArbeitstage, double mean, double sd) {
+        double[] result = new double[numArbeitstage];
+        NormalDistribution normalDistribution = new NormalDistribution(mean, sd);
+
+        double randomValue;
+        for (int i = 0; i < numArbeitstage; i++) {
+            do {
+                randomValue = normalDistribution.sample();
+            } while (randomValue < 0.25);
+            DecimalFormat decimalFormat = new DecimalFormat("###.#");
+            result[i] = Double.parseDouble(decimalFormat.format(randomValue).replace(",", "."));
+        }
+        return result;
+    }
+
 }

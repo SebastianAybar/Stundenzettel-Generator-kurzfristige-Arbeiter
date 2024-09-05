@@ -92,4 +92,19 @@ public class MitarbeiterMonat {
     public void setArbeitszeit(String arbeitszeit) {
         this.arbeitszeit = arbeitszeit;
     }
+
+    @Override
+    public String toString() {
+        return "Mitarbeiter: " +
+                berater + ", " +
+                mandant + ", " +
+                abrechnungsmonat + ", " +
+                nachnameVorname + ", " +
+                eintrittsdatum + ", " +
+                austrittsdatum + ", " +
+                personengruppenschluesselKurz + ", " +
+                personengruppenschluesselLang + ", " +
+                svBrutto + ", " +
+                arbeitszeit;
+    }
 }

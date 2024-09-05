@@ -1,5 +1,6 @@
 package com.demo.helper;
 
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Border;
@@ -9,9 +10,12 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.paint.Color;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class Validation {
 
+    public static boolean errorDisplayed = false;
 
     // Allgemeine Validierungen
 
@@ -65,12 +69,28 @@ public class Validation {
         lblFailedMessage.setVisible(true);
     }
 
+    public static void displayErrorInGui(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Hinweis");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+        errorDisplayed = true;
+    }
 
     // Validierungen für Excel-Liste
 
     public static boolean isPathAnExcelFile(TextField field) {
-        return field.getText().endsWith(".xlsx") || field.getText().endsWith(".xlsm") || field.getText().endsWith(".xls")
-                || field.getText().endsWith(".csv");
+        if(field.getText().endsWith(".xlsx") || field.getText().endsWith(".xlsm") || field.getText().endsWith(".xls")
+                || field.getText().endsWith(".csv")) {
+            String pathInput = field.getText();
+            try {
+                FileInputStream fileInputExcel = new FileInputStream(pathInput);
+                return true;
+            } catch (FileNotFoundException e) {
+                return false;
+            }
+        } else return false;
     }
 
     public static boolean isSvBruttoValid(String svBrutto) {

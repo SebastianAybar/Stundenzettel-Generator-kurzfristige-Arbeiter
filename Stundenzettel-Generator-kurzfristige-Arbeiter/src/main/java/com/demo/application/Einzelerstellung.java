@@ -1,6 +1,8 @@
 package com.demo.application;
 
 
+import org.apache.poi.ss.usermodel.*;
+
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -9,8 +11,11 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static com.demo.helper.Constants.PATH_FILE_STUNDENZETTEL_VORLAGE_LOCAL;
 
@@ -39,7 +44,6 @@ public class Einzelerstellung {
             }
 
             // Create the destination path in the home directory
-
             Path destinationPath = Paths.get(PATH_FILE_STUNDENZETTEL_VORLAGE_LOCAL);
 
             if (!Files.exists(destinationPath)) {
@@ -58,6 +62,28 @@ public class Einzelerstellung {
             String[] datum = abrechnungsmonat.split("/");
             List<LocalDate> datenDesMonats = getDatenDesMonats(datum);
             List<Row> rowsToRemove = new ArrayList<>();
+
+            //Wir befüllen die Felder Abrechnungsmonat, Mitarbeiter, Mitarbeiternummer
+            int counterTage = 0;
+            for (Row row : currentSheet) {
+                for (Cell cell : row) {
+                    if (cell.getCellType() == CellType.STRING) {
+                        String cellValue = cell.getStringCellValue().trim();
+                        if (cellValue.equals("<<Abrechnungsmonat>>")) {
+                            cell.setCellValue(abrechnungsmonat);
+                        }
+                        if (cellValue.equals("<<Mitarbeiter>>")) {
+                            cell.setCellValue(name);
+                        }
+                        if (cellValue.equals("<<Mitarbeiternummer>>")) {
+                            cell.setCellValue(mitarbeiternummer);
+                        }
+                    }
+                }
+            }
+            for (Row row : rowsToRemove) {
+                currentSheet.removeRow(row);
+            }
 
         } catch (Exception e) {
             throw new RuntimeException(e);

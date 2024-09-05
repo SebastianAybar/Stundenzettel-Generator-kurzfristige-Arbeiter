@@ -194,6 +194,36 @@ public class StundenzettelGeneratorController implements Initializable {
 
         stundenlohn = Double.parseDouble(textfieldStundenlohn.getText().replace(",", "."));
 
+        // Prüfung Feld Output Path
+        if (!isTextfieldFilled(textfieldOutputPath)) {
+            setTextfieldInvalid(textfieldOutputPath, lblValidationOutputPath, VALIDATION_EMPTY_FIELD);
+            fieldsExcelListeValid = false;
+        } else {
+            setTextfieldValid(textfieldOutputPath, lblValidationOutputPath);
+
+            if (!isPathADirectory(textfieldOutputPath)) {
+                setTextfieldInvalid(textfieldOutputPath, lblValidationOutputPath, VALIDATION_WRONG_OUTPUT_PATH);
+                fieldsExcelListeValid = false;
+            } else {
+                setTextfieldValid(textfieldOutputPath, lblValidationOutputPath);
+            }
+        }
+
+        // Prüfung Feld Stundenlohn
+        if (!isTextfieldFilled(textfieldStundenlohn)) {
+            setTextfieldInvalid(textfieldStundenlohn, lblValidationStundenlohn, VALIDATION_EMPTY_FIELD);
+            fieldsExcelListeValid = false;
+        } else {
+            setTextfieldValid(textfieldStundenlohn, lblValidationStundenlohn);
+
+            if (!isStundenlohnValid(textfieldStundenlohn)) {
+                setTextfieldInvalid(textfieldStundenlohn, lblValidationStundenlohn, VALIDATION_WRONG_INPUT);
+                fieldsExcelListeValid = false;
+            } else {
+                setTextfieldValid(textfieldStundenlohn, lblValidationStundenlohn);
+            }
+        }
+
         // Excel Liste ausgewählt
         if (btnExcelListeClicked) {
             fieldsExcelListeValid = true;
@@ -214,35 +244,6 @@ public class StundenzettelGeneratorController implements Initializable {
                 }
             }
 
-            // Prüfung Feld Output Path
-            if (!isTextfieldFilled(textfieldOutputPath)) {
-                setTextfieldInvalid(textfieldOutputPath, lblValidationOutputPath, VALIDATION_EMPTY_FIELD);
-                fieldsExcelListeValid = false;
-            } else {
-                setTextfieldValid(textfieldOutputPath, lblValidationOutputPath);
-
-                if (!isPathADirectory(textfieldOutputPath)) {
-                    setTextfieldInvalid(textfieldOutputPath, lblValidationOutputPath, VALIDATION_WRONG_OUTPUT_PATH);
-                    fieldsExcelListeValid = false;
-                } else {
-                    setTextfieldValid(textfieldOutputPath, lblValidationOutputPath);
-                }
-            }
-
-            // Prüfung Feld Stundenlohn
-            if (!isTextfieldFilled(textfieldStundenlohn)) {
-                setTextfieldInvalid(textfieldStundenlohn, lblValidationStundenlohn, VALIDATION_EMPTY_FIELD);
-                fieldsExcelListeValid = false;
-            } else {
-                setTextfieldValid(textfieldStundenlohn, lblValidationStundenlohn);
-
-                if (!isStundenlohnValid(textfieldStundenlohn)) {
-                    setTextfieldInvalid(textfieldStundenlohn, lblValidationStundenlohn, VALIDATION_WRONG_INPUT);
-                    fieldsExcelListeValid = false;
-                } else {
-                    setTextfieldValid(textfieldStundenlohn, lblValidationStundenlohn);
-                }
-            }
 
             // Bei Klick auf Button OK: Wenn alle Felder gültig, dann weiter
             if (fieldsExcelListeValid) {
@@ -320,33 +321,6 @@ public class StundenzettelGeneratorController implements Initializable {
                 }
             }
 
-            // Prüfung Feld Output Path
-            if (!isTextfieldFilled(textfieldOutputPath)) {
-                setTextfieldInvalid(textfieldOutputPath, lblValidationOutputPath, VALIDATION_EMPTY_FIELD);
-                fieldsExcelListeValid = false;
-            } else {
-                setTextfieldValid(textfieldOutputPath, lblValidationOutputPath);
-
-                if (!isPathADirectory(textfieldOutputPath)) {
-                    setTextfieldInvalid(textfieldOutputPath, lblValidationOutputPath, VALIDATION_WRONG_OUTPUT_PATH);
-                    fieldsEinzelerstellungValid = false;
-                }
-            }
-
-            // Prüfung Feld Stundenlohn
-            if (!isTextfieldFilled(textfieldStundenlohn)) {
-                setTextfieldInvalid(textfieldStundenlohn, lblValidationStundenlohn, VALIDATION_EMPTY_FIELD);
-                fieldsExcelListeValid = false;
-            } else {
-                setTextfieldValid(textfieldStundenlohn, lblValidationStundenlohn);
-
-                if (!isStundenlohnValid(textfieldStundenlohn)) {
-                    setTextfieldInvalid(textfieldStundenlohn, lblValidationStundenlohn, VALIDATION_WRONG_INPUT);
-                    fieldsExcelListeValid = false;
-                } else {
-                    setTextfieldValid(textfieldStundenlohn, lblValidationStundenlohn);
-                }
-            }
 
             //Wenn alles geklappt hat
             if (fieldsEinzelerstellungValid) {

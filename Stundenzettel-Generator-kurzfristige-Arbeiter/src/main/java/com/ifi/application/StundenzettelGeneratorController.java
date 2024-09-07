@@ -169,7 +169,6 @@ public class StundenzettelGeneratorController implements Initializable {
         lblSchlussnachricht.setVisible(false);
         lblValidationOutputPath.setVisible(false);
         lblValidationStundenlohn.setVisible(false);
-        textfieldStundenlohn.setText("");
         textfieldInputPath.setText("");
         // Boolean-Werte werden umgestellt
         btnEinzelerstellungClicked = false;

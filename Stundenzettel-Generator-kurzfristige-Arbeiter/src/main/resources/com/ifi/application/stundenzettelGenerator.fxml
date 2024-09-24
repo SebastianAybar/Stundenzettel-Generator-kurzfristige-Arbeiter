@@ -24,7 +24,7 @@
         </HBox>
         <HBox alignment="CENTER_RIGHT" prefHeight="36.0" prefWidth="218.0" styleClass="hbox-hbox-header" HBox.hgrow="ALWAYS">
           <children>
-            <Label fx:id="lblStundenlohn" alignment="TOP_RIGHT" prefHeight="17.0" prefWidth="92.0" text="Stundenlohn:">
+            <Label fx:id="lblStundenlohn" alignment="TOP_RIGHT" prefHeight="17.0" prefWidth="92.0" text="Mindestlohn:">
               <font>
                 <Font name="Arial Bold" size="12.0" />
               </font></Label>
@@ -63,9 +63,9 @@
             </Label>
          </children>
       </VBox>
-    <HBox fx:id="hboxEinzelerstellung" alignment="CENTER_LEFT" layoutX="5.0" layoutY="75.0" prefHeight="60.0" prefWidth="598.0" styleClass="hbox-einzelerstellung" visible="false" AnchorPane.leftAnchor="56.0" AnchorPane.rightAnchor="82.0" HBox.hgrow="ALWAYS">
+    <HBox fx:id="hboxEinzelerstellung" alignment="CENTER_LEFT" layoutX="5.0" layoutY="75.0" prefHeight="130.0" prefWidth="547.0" styleClass="hbox-einzelerstellung" visible="false" AnchorPane.leftAnchor="56.0" AnchorPane.rightAnchor="82.0" HBox.hgrow="ALWAYS">
       <children>
-        <VBox alignment="CENTER" prefHeight="60.0" prefWidth="308.0">
+        <VBox alignment="CENTER" prefHeight="82.0" prefWidth="306.0">
           <children>
             <HBox alignment="CENTER" prefHeight="67.0" prefWidth="314.0">
               <children>
@@ -73,7 +73,7 @@
                   <font>
                     <Font name="System Bold" size="12.0" />
                   </font></Label>
-                <TextField fx:id="textfieldAbrechnungsmonat" prefHeight="25.0" prefWidth="134.0" promptText="Format: &quot;yyyy/MM&quot;">
+                <TextField fx:id="textfieldAbrechnungsmonat" prefHeight="25.0" prefWidth="135.0" promptText="Format: &quot;yyyy/MM&quot;">
                   <font>
                     <Font name="System Italic" size="12.0" />
                   </font></TextField>
@@ -88,37 +88,57 @@
                 <TextField fx:id="textfieldMitarbeiternummer" prefHeight="25.0" prefWidth="135.0" />
               </children>
             </HBox>
+                  <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label fx:id="lblEintrittsdatum" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="114.0" text="Eintrittsdatum: ">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="textfieldEintrittsdatum" prefHeight="26.0" prefWidth="165.0" />
+                     </children>
+                  </HBox>
           </children>
         </VBox>
         <VBox prefHeight="60.0" prefWidth="241.0">
           <children>
-            <HBox alignment="CENTER" prefHeight="61.0" prefWidth="183.0">
+            <HBox alignment="CENTER" prefHeight="67.0" prefWidth="183.0">
               <children>
-                <Label fx:id="lblSvBrutto" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="63.0" text="SV-Brutto: " textAlignment="RIGHT">
+                <Label fx:id="lblSvBrutto" alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="63.0" text="SV-Brutto: " textAlignment="RIGHT">
                   <font>
                     <Font name="System Bold" size="12.0" />
                   </font></Label>
-                <TextField fx:id="textfieldSvBrutto" prefHeight="25.0" prefWidth="123.0" />
+                <TextField fx:id="textfieldSvBrutto" prefHeight="25.0" prefWidth="137.0" />
               </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="59.0" prefWidth="183.0">
               <children>
-                <Label fx:id="lblName" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="42.0" text="Name: ">
+                <Label fx:id="lblName" alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="40.0" text="Name: ">
                   <font>
                     <Font name="System Bold" size="12.0" />
                   </font></Label>
-                <TextField fx:id="textfieldName" prefHeight="25.0" prefWidth="144.0" />
+                <TextField fx:id="textfieldName" prefHeight="25.0" prefWidth="160.0" />
               </children>
             </HBox>
+                  <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label fx:id="lblAustrittsdatum" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="113.0" text="Austrittsdatum: ">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="textfieldAustrittsdatum" prefHeight="26.0" prefWidth="107.0" />
+                     </children>
+                  </HBox>
           </children>
         </VBox>
       </children></HBox>
-    <HBox alignment="CENTER_RIGHT" layoutX="72.0" layoutY="160.0" prefHeight="25.0" prefWidth="535.0" AnchorPane.leftAnchor="64.0" AnchorPane.rightAnchor="136.0">
+    <HBox alignment="CENTER_RIGHT" layoutX="72.0" layoutY="203.0" prefHeight="26.0" prefWidth="494.0" AnchorPane.leftAnchor="72.0" AnchorPane.rightAnchor="119.0">
       <children>
-        <Separator prefHeight="20.0" HBox.hgrow="ALWAYS" />
+        <Separator prefHeight="20.0" prefWidth="475.0" HBox.hgrow="ALWAYS" />
       </children>
     </HBox>
-    <VBox fx:id="boxOutputPath" layoutX="70.0" layoutY="200.0" prefHeight="60.0" prefWidth="479.0" AnchorPane.leftAnchor="82.0" AnchorPane.rightAnchor="136.0">
+    <VBox fx:id="boxOutputPath" layoutX="82.0" layoutY="230.0" prefHeight="60.0" prefWidth="494.0" AnchorPane.leftAnchor="82.0" AnchorPane.rightAnchor="136.0">
       <children>
         <HBox alignment="CENTER_LEFT" maxHeight="43.0" minHeight="43.0" prefHeight="43.0" spacing="10">
           <Label fx:id="lblOutputPath" alignment="TOP_LEFT" text="Ausgabeverzeichnis:">
@@ -132,39 +152,43 @@
             </graphic>
           </Button>
         </HBox>
-        <HBox alignment="TOP_RIGHT" prefHeight="17.0" prefWidth="525.0" VBox.vgrow="ALWAYS">
+            <HBox alignment="CENTER" prefHeight="18.0" prefWidth="377.0">
+               <children>
+                <Label fx:id="lblValidationOutputPath" alignment="TOP_LEFT" prefHeight="18.0" prefWidth="188.0" text="ungültige Eingabe" textFill="#e10000" visible="false">
+                  <font>
+                    <Font name="System Italic" size="12.0" />
+                  </font>
+                  <opaqueInsets>
+                    <Insets top="2.0" />
+                  </opaqueInsets>
+                  </Label>
+               </children>
+            </HBox>
+        <HBox alignment="TOP_RIGHT" prefHeight="18.0" prefWidth="486.0" VBox.vgrow="ALWAYS">
                <children>
              <CheckBox fx:id="checkboxErsetzen" alignment="CENTER_RIGHT" disable="true" mnemonicParsing="false" selected="true" text="Datei ersetzen?">
                <font>
                  <Font name="System Bold" size="12.0" />
                </font>
                      <HBox.margin>
-                        <Insets right="27.0" />
+                        <Insets />
                      </HBox.margin>
                   </CheckBox>
                </children>
         </HBox>
       </children>
     </VBox>
-    <Label fx:id="lblValidationOutputPath" layoutX="225.0" layoutY="243.0" text="ungültige Eingabe" textFill="#e10000" visible="false">
-      <font>
-        <Font name="System Italic" size="12.0" />
-      </font>
-      <opaqueInsets>
-        <Insets top="2.0" />
-      </opaqueInsets>
-      </Label>
-    <VBox alignment="CENTER_RIGHT" layoutX="72.0" layoutY="300.0" maxHeight="43.0" minHeight="43.0" prefHeight="43.0" prefWidth="494.0" spacing="5" AnchorPane.bottomAnchor="82.0" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="121.0">
+    <VBox alignment="CENTER_RIGHT" layoutX="72.0" layoutY="311.0" maxHeight="43.0" minHeight="43.0" prefHeight="43.0" prefWidth="494.0" spacing="5" AnchorPane.bottomAnchor="60.80000000000001" AnchorPane.leftAnchor="72.0" AnchorPane.rightAnchor="119.0">
       <children>
         <Separator prefHeight="20.0" prefWidth="446.0" />
-            <HBox alignment="CENTER_LEFT" maxHeight="43.0" minHeight="43.0" prefHeight="43.0">
+            <HBox alignment="CENTER_RIGHT" maxHeight="43.0" minHeight="43.0" prefHeight="43.0">
                <children>
-              <Button fx:id="btnConfirm" alignment="CENTER_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btnConfirmClicked" text="OK">
+              <Button fx:id="btnConfirm" alignment="CENTER_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btnConfirmClicked" text="OK" textAlignment="RIGHT" HBox.hgrow="ALWAYS">
                 <font>
                   <Font name="Arial Bold" size="12.0" />
                 </font>
                      <HBox.margin>
-                        <Insets left="460.0" />
+                        <Insets />
                      </HBox.margin>
                   </Button>
                </children>
@@ -181,12 +205,12 @@
         <Font name="System Italic" size="12.0" />
       </font>
     </Label>
-    <Label fx:id="lblMitarbeiternummerEmpty" layoutX="203.0" layoutY="134.0" prefHeight="17.0" prefWidth="100.0" text="ungültige Eingabe" textFill="#e10000" visible="false">
+    <Label fx:id="lblMitarbeiternummerEmpty" layoutX="203.0" layoutY="138.0" prefHeight="17.0" prefWidth="100.0" text="ungültige Eingabe" textFill="#e10000" visible="false">
       <font>
         <Font name="System Italic" size="12.0" />
       </font>
     </Label>
-    <Label fx:id="lblNameEmpty" layoutX="442.0" layoutY="132.0" prefHeight="17.0" prefWidth="100.0" text="ungültige Eingabe" textFill="#e10000" visible="false">
+    <Label fx:id="lblNameEmpty" layoutX="442.0" layoutY="136.0" prefHeight="17.0" prefWidth="100.0" text="ungültige Eingabe" textFill="#e10000" visible="false">
       <font>
         <Font name="System Italic" size="12.0" />
       </font>
@@ -200,6 +224,15 @@
       <font>
         <Font name="System Bold" size="12.0" />
       </font>
+      </Label>
+      <Label fx:id="lblValidationEintrittsdatum" layoutX="172.0" layoutY="159.0" prefHeight="18.0" prefWidth="120.0" text="ungültige Eingabe" textFill="#e10000" visible="false">
+         <font>
+            <Font name="System Italic" size="12.0" />
+         </font></Label>
+      <Label fx:id="lblValidationAustrittsdatum" layoutX="490.0" layoutY="159.0" prefHeight="18.0" prefWidth="130.0" text="ungültige Eingabe" textFill="#e10000" visible="false">
+         <font>
+            <Font name="System Italic" size="12.0" />
+         </font>
       </Label>
   </children>
 </AnchorPane>

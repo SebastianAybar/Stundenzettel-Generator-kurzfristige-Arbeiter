@@ -8,7 +8,6 @@ import javafx.scene.control.TextField;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.poi.ss.usermodel.*;
 
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,6 +16,7 @@ import java.nio.file.StandardCopyOption;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -132,8 +132,9 @@ public class Utils {
 
     }
 
+
     // Gibt eine Liste mit allen Tagen des bestimmten Monats zurück
-    public static List<LocalDate> getAlleTageDesMonats(String[] datum) {
+    public static List<LocalDate> getAlleTageDesMonatsAlt(String[] datum) {
         YearMonth jahrMonat = YearMonth.of(Integer.parseInt(datum[0]), Integer.parseInt(datum[1]));
         int anzahlTageImMonat = jahrMonat.lengthOfMonth();
         LocalDate ersterTag = jahrMonat.atDay(1);
@@ -145,6 +146,31 @@ public class Utils {
         return datenDesMonats;
     }
 
+    // Gibt eine Liste mit allen Tagen des bestimmten Monats zurück
+    public static List<LocalDate> getAlleTageDesMonats(String[] datum, String eintrittsdatum, String austrittsdatum) {
+
+        YearMonth jahrMonat = YearMonth.of(Integer.parseInt(datum[0]), Integer.parseInt(datum[1]));
+        int anzahlTageImMonat = jahrMonat.lengthOfMonth();
+        LocalDate ersterTag = jahrMonat.atDay(1);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+
+        LocalDate entryDate = LocalDate.parse(eintrittsdatum, formatter);
+        LocalDate exitDate = LocalDate.parse(austrittsdatum, formatter);
+
+        List<LocalDate> datenDesMonats = new ArrayList<>();
+
+        for (int j = 0; j < anzahlTageImMonat; j++) {
+            LocalDate aktuellesDatum = ersterTag.plusDays(j);
+            // Prüfen, ob aktuelles Datum zwischen Eintritts- und Austrittsdatum liegt
+            if ((aktuellesDatum.isEqual(entryDate) || aktuellesDatum.isAfter(entryDate)) &&
+                    (aktuellesDatum.isEqual(exitDate) || aktuellesDatum.isBefore(exitDate))) {
+                datenDesMonats.add(aktuellesDatum);
+            }
+        }
+        System.out.println(datenDesMonats);
+        return datenDesMonats;
+    }
     // Prüft, ob das angegebene Datum ein Feiertag ist (mithilfe der Library <jollyday>)
     public static boolean isDatumEinFeiertag(LocalDate datum, int jahr) {
         final String BUNDESLAND = "he";

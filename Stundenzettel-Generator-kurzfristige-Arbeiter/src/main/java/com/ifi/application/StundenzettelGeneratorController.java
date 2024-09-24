@@ -13,12 +13,14 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import static com.demo.helper.Constants.*;
 import static com.demo.helper.Utils.*;
 import static com.demo.helper.Validation.*;
+import static java.lang.Double.parseDouble;
 
 public class StundenzettelGeneratorController implements Initializable {
 
@@ -116,6 +118,24 @@ public class StundenzettelGeneratorController implements Initializable {
     @FXML
     private TextField textfieldSvBrutto;
 
+    @FXML
+    private TextField textfieldEintrittsdatum;
+
+    @FXML
+    private TextField textfieldAustrittsdatum;
+
+    @FXML
+    private Label lblEintrittsdatum;
+
+    @FXML
+    private Label lblAustrittsdatum;
+
+    @FXML
+    private Label lblValidationEintrittsdatum;
+
+    @FXML
+    private Label lblValidationAustrittsdatum;
+
     //================================================== CLASS VARIABLES ===================================================
 
     public boolean btnExcelListeClicked = true;
@@ -126,9 +146,6 @@ public class StundenzettelGeneratorController implements Initializable {
 
     private boolean fieldsEinzelerstellungValid;
 
-    double svBrutto;
-
-    double stundenlohn;
 
     //================================================== VIEW METHODS ======================================================
 
@@ -157,6 +174,11 @@ public class StundenzettelGeneratorController implements Initializable {
 
     @FXML
     public void switchToViewExcel() {
+        // Textfelder müssen wieder auf valide gesetzt werden
+        setTextfieldValid(textfieldAbrechnungsmonat, lblFalschesFormatAbrechnungsmonat);
+        setTextfieldValid(textfieldMitarbeiternummer, lblMitarbeiternummerEmpty);
+        setTextfieldValid(textfieldSvBrutto, lblFalschesFormatSvBrutto);
+        setTextfieldValid(textfieldName, lblNameEmpty);
         // Elemente der Einzelerstellung-Ansicht werden ausgeblendet
         hboxEinzelerstellung.setVisible(false);
         lblNameEmpty.setVisible(false);
@@ -166,10 +188,10 @@ public class StundenzettelGeneratorController implements Initializable {
         // Elemente der Excel-Liste-Ansicht werden eingeblendet
         boxExcelListeInputPath.setVisible(true);
         lblValidationInputPath.setVisible(false);
-        lblSchlussnachricht.setVisible(false);
-        lblValidationOutputPath.setVisible(false);
+        //lblSchlussnachricht.setVisible(false);
+        //lblValidationOutputPath.setVisible(false);
         lblValidationStundenlohn.setVisible(false);
-        textfieldStundenlohn.setText("");
+        //textfieldStundenlohn.setText("");
         textfieldInputPath.setText("");
         // Boolean-Werte werden umgestellt
         btnEinzelerstellungClicked = false;
@@ -178,6 +200,9 @@ public class StundenzettelGeneratorController implements Initializable {
 
     @FXML
     public void switchToViewEinzelerstellung() {
+        // Textfelder müssen wieder auf valide gesetzt werden
+        setTextfieldValid(textfieldInputPath, lblValidationInputPath);
+
         boxExcelListeInputPath.setVisible(false);
 
         hboxEinzelerstellung.setVisible(true);
@@ -193,18 +218,20 @@ public class StundenzettelGeneratorController implements Initializable {
     @FXML
     protected void btnConfirmClicked() {
 
-        stundenlohn = Double.parseDouble(textfieldStundenlohn.getText().replace(",", "."));
+        //stundenlohn = Double.parseDouble(textfieldStundenlohn.getText().replace(",", "."));
 
         // Prüfung Feld Output Path
         if (!isTextfieldFilled(textfieldOutputPath)) {
             setTextfieldInvalid(textfieldOutputPath, lblValidationOutputPath, VALIDATION_EMPTY_FIELD);
             fieldsExcelListeValid = false;
+            fieldsEinzelerstellungValid = false;
         } else {
             setTextfieldValid(textfieldOutputPath, lblValidationOutputPath);
 
             if (!isPathADirectory(textfieldOutputPath)) {
                 setTextfieldInvalid(textfieldOutputPath, lblValidationOutputPath, VALIDATION_WRONG_OUTPUT_PATH);
                 fieldsExcelListeValid = false;
+                fieldsEinzelerstellungValid = false;
             } else {
                 setTextfieldValid(textfieldOutputPath, lblValidationOutputPath);
             }
@@ -228,7 +255,6 @@ public class StundenzettelGeneratorController implements Initializable {
         // Excel Liste ausgewählt
         if (btnExcelListeClicked) {
             fieldsExcelListeValid = true;
-            fieldsEinzelerstellungValid = false;
 
             // Prüfung Feld Input Path
             if (!isTextfieldFilled(textfieldInputPath)) {
@@ -249,17 +275,17 @@ public class StundenzettelGeneratorController implements Initializable {
 
             // Bei Klick auf Button OK: Wenn alle Felder gültig, dann weiter
             if (fieldsExcelListeValid) {
-                System.out.println("INFO: Alle Felder sind gültig. Excel-Datei wird eingelesen...");
+                //System.out.println("INFO: Alle Felder sind gültig. Excel-Datei wird eingelesen...");
 
                 //if( alles andere auch passt, dann Eingabe-Excel-Datei einlesen, Ausgabe-Excel-Datei mit Stundenzettel-Vorlage erstellen und Stundenzettel-PDF generieren )
                 ExcelListeReader excelListeReader = new ExcelListeReader(textfieldInputPath.getText());
-                List<List<MitarbeiterMonat>> jahresliste = excelListeReader.getListOfAbrechnungsmonate(stundenlohn);
+                List<List<MitarbeiterMonat>> jahresliste = excelListeReader.getListOfAbrechnungsmonate(Double.parseDouble(textfieldStundenlohn.getText().replace(",", ".")));
 
                 excelListeReader.printJahresliste(jahresliste);
                 System.out.println("INFO: Excel-Datei wurde erfolgreich eingelesen. Mitarbeiter-Objekte wurden erstellt");
 
                 ExcelListeWriter excelListeWriter = new ExcelListeWriter(textfieldOutputPath.getText());
-                excelListeWriter.writeToExcel(jahresliste, stundenlohn);
+                excelListeWriter.writeToExcel(jahresliste, Double.parseDouble(textfieldStundenlohn.getText().replace(",", ".")));
 
                 setMessageSuccess(lblSchlussnachricht, VALIDATION_SUCCESS_PDF);
 
@@ -275,9 +301,8 @@ public class StundenzettelGeneratorController implements Initializable {
 
         // Einzelerstellung ausgewählt
         if (btnEinzelerstellungClicked) {
-            fieldsEinzelerstellungValid = true;
 
-            svBrutto = Double.parseDouble(textfieldSvBrutto.getText().replace(",", "."));
+            fieldsEinzelerstellungValid = true;
 
             // Prüfung Feld Abrechnungsmonat
             if (!isTextfieldFilled(textfieldAbrechnungsmonat)) {
@@ -288,7 +313,8 @@ public class StundenzettelGeneratorController implements Initializable {
                 if (isValidDateFormat(textfieldAbrechnungsmonat.getText())) {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM");
                     YearMonth abrechnungsmonat = YearMonth.parse(textfieldAbrechnungsmonat.getText(), formatter);
-                    if (!(abrechnungsmonat.getYear() <= LocalDate.now().getYear())) {
+                    YearMonth currentMonth = YearMonth.now();
+                    if (abrechnungsmonat.isAfter(currentMonth)) {
                         setTextfieldInvalid(textfieldAbrechnungsmonat, lblFalschesFormatAbrechnungsmonat, VALIDATION_FUTURE_DATE);
                         textfieldAbrechnungsmonat.setPromptText("Format: &quot;yyyy/MM&quot;");
                         fieldsEinzelerstellungValid = false;
@@ -315,32 +341,99 @@ public class StundenzettelGeneratorController implements Initializable {
             }
 
             // Prüfung Feld SvBrutto
-            if (!isTextfieldFilled(textfieldSvBrutto)) {
+            double svBrutto = 0;
+            String svBruttoText = textfieldSvBrutto.getText();
+
+            if (svBruttoText == null || svBruttoText.trim().isEmpty()) {
+                // Wenn das Textfeld leer ist
                 setTextfieldInvalid(textfieldSvBrutto, lblFalschesFormatSvBrutto, VALIDATION_EMPTY_FIELD);
+            } else if (!isParsableAsDouble(svBruttoText)) {
+                // Wenn der Inhalt nicht in einen double geparst werden kann
+                setTextfieldInvalid(textfieldSvBrutto, lblFalschesFormatSvBrutto, VALIDATION_NO_NUMBER);
+            } else if (Double.parseDouble(svBruttoText) < 0) {
+                // Wenn der geparste Wert kleiner als 0 ist
+                setTextfieldInvalid(textfieldSvBrutto, lblFalschesFormatSvBrutto, VALIDATION_NEGATIVE_SVBRUTTO);
                 fieldsEinzelerstellungValid = false;
             } else {
+                // Wenn der Wert gültig ist
+                svBrutto = Double.parseDouble(svBruttoText);
                 setTextfieldValid(textfieldSvBrutto, lblFalschesFormatSvBrutto);
-                try {
-                    if (svBrutto < 0) {
-                        setTextfieldInvalid(textfieldSvBrutto, lblFalschesFormatSvBrutto, VALIDATION_NEGATIVE_SVBRUTTO);
+            }
+
+            // Prüfung Feld Eintrittsdatum
+            if (isTextfieldFilled(textfieldEintrittsdatum)) {
+                if (isValidDate(textfieldEintrittsdatum.getText())) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+                    try {
+                        LocalDate eintrittsdatum = LocalDate.parse(textfieldEintrittsdatum.getText(), formatter);
+                        LocalDate currentDate = LocalDate.now();
+                        if (!eintrittsdatum.isAfter(currentDate)) {
+                            setTextfieldValid(textfieldEintrittsdatum, lblValidationEintrittsdatum);
+                            //fieldsEinzelerstellungValid = true;
+                        } else {
+                            setTextfieldInvalid(textfieldEintrittsdatum, lblValidationEintrittsdatum, VALIDATION_FUTURE_DATE);
+                            fieldsEinzelerstellungValid = false;
+                        }
+                    } catch (DateTimeParseException e) {
+                        setTextfieldInvalid(textfieldEintrittsdatum, lblValidationEintrittsdatum, VALIDATION_WRONG_DATE_FORMAT);
+                        fieldsEinzelerstellungValid = false;
                     }
-                } catch (NumberFormatException | NullPointerException nfe) {
-                    setTextfieldInvalid(textfieldSvBrutto, lblFalschesFormatSvBrutto, VALIDATION_NO_NUMBER);
+                } else {
+                    setTextfieldInvalid(textfieldEintrittsdatum, lblValidationEintrittsdatum, VALIDATION_WRONG_DATE_FORMAT);
+                    fieldsEinzelerstellungValid = false;
                 }
+            } else {
+                setTextfieldInvalid(textfieldEintrittsdatum, lblValidationEintrittsdatum, VALIDATION_EMPTY_FIELD);
+                fieldsEinzelerstellungValid = false;
+            }
+
+
+            // Prüfung Feld Austrittsdatum
+            if (isTextfieldFilled(textfieldAustrittsdatum)) {
+                if (isValidDate(textfieldAustrittsdatum.getText())) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+                    try {
+                        LocalDate austrittsdatum = LocalDate.parse(textfieldAustrittsdatum.getText(), formatter);
+                        LocalDate currentDate = LocalDate.now();
+                        if (!austrittsdatum.isAfter(currentDate)) {
+                            setTextfieldValid(textfieldAustrittsdatum, lblValidationAustrittsdatum);
+                            //fieldsEinzelerstellungValid = true;
+                        } else {
+                            setTextfieldInvalid(textfieldAustrittsdatum, lblValidationAustrittsdatum, VALIDATION_FUTURE_DATE);
+                            fieldsEinzelerstellungValid = false;
+                        }
+                    } catch (DateTimeParseException e) {
+                        setTextfieldInvalid(textfieldAustrittsdatum, lblValidationAustrittsdatum, VALIDATION_WRONG_DATE_FORMAT);
+                        fieldsEinzelerstellungValid = false;
+                    }
+                } else {
+                    setTextfieldInvalid(textfieldAustrittsdatum, lblValidationAustrittsdatum, VALIDATION_WRONG_DATE_FORMAT);
+                    fieldsEinzelerstellungValid = false;
+                }
+            } else {
+                setTextfieldInvalid(textfieldAustrittsdatum, lblValidationAustrittsdatum, VALIDATION_EMPTY_FIELD);
+                fieldsEinzelerstellungValid = false;
             }
 
 
             //Wenn alles geklappt hat
             if (fieldsEinzelerstellungValid) {
 
-                if (svBrutto >= stundenlohn) {
+                if (svBrutto >= Double.parseDouble(textfieldStundenlohn.getText().replace(",", "."))) {
 
                     saveStundenlohnToDatei(textfieldStundenlohn.getText());
                     setMessageSuccess(lblSchlussnachricht, VALIDATION_SUCCESS_PDF);
 
-                    Einzelerstellung einzelerstellung = new Einzelerstellung(textfieldAbrechnungsmonat.getText(), textfieldMitarbeiternummer.getText(), textfieldSvBrutto.getText(), textfieldName.getText());
+                    Einzelerstellung einzelerstellung = new Einzelerstellung(textfieldAbrechnungsmonat.getText(),
+                            textfieldMitarbeiternummer.getText(), svBruttoText,
+                            textfieldName.getText(), textfieldEintrittsdatum.getText(),
+                            textfieldAustrittsdatum.getText());
+
                     einzelerstellung.writeToExcel(textfieldOutputPath.getText(), textfieldStundenlohn.getText(), checkboxErsetzen.isSelected());
 
+                }
+                else {
+                    setMessageFailed(lblSchlussnachricht, VALIDATION_LESS_SVBRUTTO);
                 }
             } else {
                 setMessageFailed(lblSchlussnachricht, VALIDATION_FAILED_PDF);
@@ -362,7 +455,7 @@ public class StundenzettelGeneratorController implements Initializable {
         createIfNotExistingLocalFileLogo();
         createIfNotExistingLocalFileStundenzettelVorlage();
 
-        textfieldInputPath.setText("C:\\Users\\MM\\Desktop\\neue_excel_kurzarbeiter\\KFB_0124.xlsx");
-        textfieldOutputPath.setText("C:\\Users\\MM\\Desktop\\neue_excel_kurzarbeiter\\generierte_Dateien");
+//        textfieldInputPath.setText("C:\\Users\\MM\\Desktop\\neue_excel_kurzarbeiter\\KFB_0124.xlsx");
+//        textfieldOutputPath.setText("C:\\Users\\MM\\Desktop\\neue_excel_kurzarbeiter\\generierte_Dateien");
     }
 }

@@ -41,11 +41,12 @@ public class Constants {
     // VALIDATION MESSAGES
     public static final String VALIDATION_NO_NUMBER = "Keine Zahl";
     public static final String VALIDATION_NEGATIVE_SVBRUTTO = "Brutto kleiner als 0";
+    public static final String VALIDATION_LESS_SVBRUTTO = "Der Mitarbeiter hat weniger als eine Stunde gearbeitet.";
     public static final String VALIDATION_WRONG_DATE_FORMAT = "Falsches Format";
     public static final String VALIDATION_FUTURE_DATE = "Datum in der Zukunft";
     public static final String VALIDATION_WRONG_INPUT = "Ungültige Eingabe";
     public static final String VALIDATION_EMPTY_FIELD = "Leeres Feld";
-    public static final String VALIDATION_WRONG_INPUT_PATH = "Der angegebene Input-Pfad führt nicht zu einer gültigen Excel-Datei";
+    public static final String VALIDATION_WRONG_INPUT_PATH = "Der angegebene Input-Pfad führt nicht zu einer gültigen Excel-Datei.";
     public static final String VALIDATION_WRONG_OUTPUT_PATH = "Der Pfad ist nicht gültig";
     public static final String VALIDATION_SUCCESS_PDF = "PDF-Datei(en) wurde(n) erfolgreich generiert";
     public static final String VALIDATION_FAILED_PDF = "Fehlgeschlagen. Bitte überprüfen Sie Ihre Eingaben.";

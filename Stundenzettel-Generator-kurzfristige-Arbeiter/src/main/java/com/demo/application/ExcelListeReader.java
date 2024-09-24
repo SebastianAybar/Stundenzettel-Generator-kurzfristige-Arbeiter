@@ -124,21 +124,21 @@ public class ExcelListeReader {
 
     public void printMonatsliste(List<MitarbeiterMonat> list) {
         for (MitarbeiterMonat mitarbeiterMonat : list) {
-            System.out.println(mitarbeiterMonat.toString());
+            //System.out.println(mitarbeiterMonat.toString());
         }
     }
 
     public void printList(List<MitarbeiterMonat> list) {
         for (MitarbeiterMonat mitarbeiterMonat : list) {
-            System.out.println(mitarbeiterMonat.toString());
+            //System.out.println(mitarbeiterMonat.toString());
         }
     }
 
     public void printJahresliste(List<List<MitarbeiterMonat>> lists) {
-        System.out.println("Jahresliste (alle erfassten Mitarbeiter):");
+        //System.out.println("Jahresliste (alle erfassten Mitarbeiter):");
         for (List<MitarbeiterMonat> list : lists) {
             printList(list);
-            System.out.println();
+            //System.out.println();
         }
     }
 

@@ -102,6 +102,18 @@ public class Validation {
         return true;
     }
 
+    public static boolean isParsableAsDouble(String str) {
+        if (str == null) {
+            return false;
+        }
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
 
     // Validierungen für Einzelerstellung
 
@@ -109,5 +121,7 @@ public class Validation {
         return text.matches("\\d{4}/\\d{2}");
     }
 
-
+    public static boolean isValidDate(String text) {
+        return text.matches("\\d{2}.\\d{2}.\\d{4}");
+    }
 }

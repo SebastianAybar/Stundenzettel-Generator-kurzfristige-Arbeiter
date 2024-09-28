@@ -125,7 +125,7 @@ public class Einzelerstellung {
                         }*/
 
                         if (cellValue.startsWith("<<Std")) {
-                            if (counterTage > 0 && counterTage < datenDesMonatsAlt.size() && datenDesMonats.contains(datenDesMonatsAlt.get(counterTage-1))) {
+                            if (counterTage > 0 && counterTage < datenDesMonatsAlt.size() && datenDesMonats.contains(datenDesMonatsAlt.get(counterTage - 1))) {
                                 arbeitszeitenCells.add(cell);
                             } else {
                                 cell.setCellValue("");
@@ -150,17 +150,25 @@ public class Einzelerstellung {
             int gerundeteArbeitstage = 0;
             double totalMean = 0;
 
+            int randomArbeitstage;
             Random random = new Random();
-            int min = arbeitszeitenCells.size() - 3;
-            int max = arbeitszeitenCells.size();
-            int randomArbeitstage = random.nextInt(max - min) + min; //Anzahl der Arbeitstage
+
+            if (arbeitszeitenCells.size() > 5) {
+                int min = arbeitszeitenCells.size() - 3;
+                int max = arbeitszeitenCells.size();
+                randomArbeitstage = random.nextInt(max - min) + min; //Anzahl der Arbeitstage
+            } else {
+                randomArbeitstage = arbeitszeitenCells.size();
+            }
+
             double svBruttoGrenze = 8 * mindestlohn * randomArbeitstage; //Diese Variable brauchen wir um zu wissen wann wir in den 3. Case müssen
 
             System.out.println("-----------------");
             System.out.println("svBrutto: " + svBrutto);
 
+
             //Wenn svBrutto die Grenze übersteigt
-            if(svBrutto >= svBruttoGrenze) {
+            if (svBrutto >= svBruttoGrenze) {
                 totalMean = 6.5 + (random.nextDouble() * 1.5); //Damit nicht jeder Mitarbeiter exakt 8h durchschnittliche Arbeitszeit hat
                 gerundeteArbeitstage = randomArbeitstage; //Anzahl der Arbeitstage
                 stundensatz = gerundeteArbeitstage * totalMean;
@@ -170,12 +178,24 @@ public class Einzelerstellung {
                 System.out.println("stundensatz: " + stundensatz);
                 System.out.println("totalMean: " + totalMean);
                 System.out.println("-----------------");
+
+                if (stundenlohn > 150) {
+                    gerundeteArbeitstage = arbeitszeitenCells.size();
+                    totalMean = 8; //Damit nicht jeder Mitarbeiter exakt 8h durchschnittliche Arbeitszeit hat
+                    stundensatz = gerundeteArbeitstage * totalMean;
+                    stundenlohn = svBrutto / stundensatz;
+                    if(stundenlohn > 150) {
+                        DecimalFormat df = new DecimalFormat("#.00");
+                        displayErrorInGui("Stundenlohn liegt bei: " + df.format(stundenlohn) + "€.\n" + "Brutto ist zu hoch für den Beschäfigungszeitraum.");
+                        return;
+                    }
+                }
             } else { //Wenn svBrutto unter der Grenze liegt
                 gerundeteArbeitstage = randomArbeitstage;
                 totalMean = svBrutto / (mindestlohn * gerundeteArbeitstage);
                 stundensatz = gerundeteArbeitstage * totalMean;
                 while (totalMean < 2) {
-                     totalMean = totalMean + 1;
+                    totalMean = totalMean + 1;
                 }
                 gerundeteArbeitstage = (int) Math.ceil(stundensatz / totalMean);
                 double stundenlohn = mindestlohn;

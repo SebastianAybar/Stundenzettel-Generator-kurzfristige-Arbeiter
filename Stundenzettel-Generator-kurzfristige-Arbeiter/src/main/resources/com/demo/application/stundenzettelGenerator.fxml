@@ -220,7 +220,7 @@
         <Font name="System Italic" size="12.0" />
       </font>
       </Label>
-    <Label fx:id="lblSchlussnachricht" layoutX="80.0" layoutY="315.0" prefHeight="18.0" prefWidth="344.0" text="PDF-Dateien wurden erfolgreich generiert" textAlignment="CENTER" textFill="#00c300" visible="false">
+    <Label fx:id="lblSchlussnachricht" layoutX="80.0" layoutY="315.0" prefHeight="43.0" prefWidth="344.0" text="PDF-Dateien wurden erfolgreich generiert" textAlignment="CENTER" textFill="#00c300" visible="false">
       <font>
         <Font name="System Bold" size="12.0" />
       </font>

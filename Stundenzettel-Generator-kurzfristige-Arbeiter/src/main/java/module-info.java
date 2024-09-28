@@ -10,6 +10,7 @@ module com.demo.application {
     requires de.focus_shift.jollyday.jaxb;
     requires commons.math3;
     requires itextpdf;
+    requires org.apache.commons.lang3;
 
     opens com.demo.application to javafx.fxml;
     exports com.demo.application;

@@ -168,7 +168,7 @@ public class Utils {
                 datenDesMonats.add(aktuellesDatum);
             }
         }
-        System.out.println(datenDesMonats);
+        //System.out.println("Alle LocalDate des Monats: " + datenDesMonats);
         return datenDesMonats;
     }
     // Prüft, ob das angegebene Datum ein Feiertag ist (mithilfe der Library <jollyday>)

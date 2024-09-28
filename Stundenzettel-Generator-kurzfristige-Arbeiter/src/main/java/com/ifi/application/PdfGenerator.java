@@ -78,6 +78,7 @@ public class PdfGenerator {
 
             // PDF-Dokument schließen
             document.close();
+            System.out.println("---------------------------");
             System.out.println("Successful.");
         } catch (DocumentException e) {
             e.printStackTrace();

@@ -159,7 +159,7 @@ public class ExcelListeWriter {
 //                     Das ist nicht der Fall, wenn bspw. der Stundenlohn im Vergleich zum svBrutto sehr niedrig ist und die Person hätte zu viele Stunden bzw. Tage arbeiten müssen, um das zu erreichen
                     if (gerundeteArbeitstage > arbeitszeitenCells.size()) {
                         displayErrorInGui("Das Gehalt übersteigt die mögliche Monatsarbeitszeit im Verhältnis zum angegebenen Stundenlohn ");
-                        System.out.println("GUI ERROR sollte angezeigt werden. Check code!");
+                        //System.out.println("GUI ERROR sollte angezeigt werden. Check code!");
                         return;
                     }
 

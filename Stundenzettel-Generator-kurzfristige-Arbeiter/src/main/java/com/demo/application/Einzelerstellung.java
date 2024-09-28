@@ -1,5 +1,6 @@
 package com.demo.application;
 
+import static com.demo.helper.Constants.*;
 import static com.demo.helper.Validation.displayErrorInGui;
 
 import com.demo.helper.Utils;
@@ -25,9 +26,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
 import java.util.*;
 
-import static com.demo.helper.Constants.DOCUMENT_FILE_SUFFIX;
-import static com.demo.helper.Constants.PATH_FILE_STUNDENZETTEL_VORLAGE_LOCAL;
-
 
 public class Einzelerstellung {
 
@@ -48,7 +46,9 @@ public class Einzelerstellung {
     }
 
     public void writeToExcel(String outputPath, String lohn, boolean isErsetzenSelected) {
+
         int counter = 1;
+
         try {
             InputStream fileStundenzettelVorlageLocal = new FileInputStream(PATH_FILE_STUNDENZETTEL_VORLAGE_LOCAL);
 
@@ -142,54 +142,24 @@ public class Einzelerstellung {
                 currentSheet.removeRow(row);
             }
 
-
-
-            //---------------------Vor irgendeinem Case
+            //Wir berechnen die Variablen totalMean, gerundeteArbeitstage und den Stundensatz für die Normalverteilung
             double svBrutto = Double.parseDouble(this.svBrutto.replace(",", "."));
+            double mindestlohn = Double.parseDouble(lohn.replace(",", "."));
+
             double stundensatz = 0;
             int gerundeteArbeitstage = 0;
             double totalMean = 0;
 
-            //---------------------Case 1
-            if (svBrutto <= 1500) {
-                double stundenlohn = Double.parseDouble(lohn.replace(",", "."));
-                stundensatz = svBrutto / stundenlohn;
-                double meanProportionPerEuro = 2.5 / 520;
-
-                if (svBrutto <= 520) {
-                    totalMean = 2.5;
-                } else {
-                    totalMean = meanProportionPerEuro * svBrutto;
-                }
-
-                double arbeitstage = stundensatz / totalMean;
-                gerundeteArbeitstage = (int) Math.round(arbeitstage); //Anzahl der Arbeitstage
-                if (gerundeteArbeitstage == 0) gerundeteArbeitstage = 1;
-                System.out.println("gerundetete Arbeitstage: " + gerundeteArbeitstage);
-                System.out.println("stundenlohn: " + stundenlohn);
-                System.out.println("stundensatz: " + stundensatz);
-
-            }
-
-            //---------------------Case 2
-            // Zufallszahl zwischen (datenDesMonats.size() - Sonntage - 3) und (datenDesMonats.size() - Sonntage)
             Random random = new Random();
             int min = arbeitszeitenCells.size() - 3;
             int max = arbeitszeitenCells.size();
             int randomArbeitstage = random.nextInt(max - min) + min; //Anzahl der Arbeitstage
-            double svBruttoGrenze = 8 * Double.parseDouble(lohn.replace(",", ".")) * randomArbeitstage; //Diese Variable brauchen wir um zu wissen wann wir in den 3. Case müssen
+            double svBruttoGrenze = 8 * mindestlohn * randomArbeitstage; //Diese Variable brauchen wir um zu wissen wann wir in den 3. Case müssen
 
-            if(svBrutto > 1500 && svBrutto < svBruttoGrenze) {
-                gerundeteArbeitstage = randomArbeitstage; //Anzahl der Arbeitstage
-                totalMean = svBrutto / (gerundeteArbeitstage * Double.parseDouble(lohn.replace(",", ".")));
-                stundensatz = totalMean * gerundeteArbeitstage;
-                double stundenlohn = svBrutto / stundensatz;
-                System.out.println("gerundetete Arbeitstage: " + gerundeteArbeitstage);
-                System.out.println("stundenlohn: " + stundenlohn);
-                System.out.println("stundensatz: " + stundensatz);
-            }
+            System.out.println("-----------------");
+            System.out.println("svBrutto: " + svBrutto);
 
-            //---------------------Case 3
+            //Wenn svBrutto die Grenze übersteigt
             if(svBrutto >= svBruttoGrenze) {
                 totalMean = 6.5 + (random.nextDouble() * 1.5); //Damit nicht jeder Mitarbeiter exakt 8h durchschnittliche Arbeitszeit hat
                 gerundeteArbeitstage = randomArbeitstage; //Anzahl der Arbeitstage
@@ -199,17 +169,32 @@ public class Einzelerstellung {
                 System.out.println("stundenlohn: " + stundenlohn);
                 System.out.println("stundensatz: " + stundensatz);
                 System.out.println("totalMean: " + totalMean);
+                System.out.println("-----------------");
+            } else { //Wenn svBrutto unter der Grenze liegt
+                gerundeteArbeitstage = randomArbeitstage;
+                totalMean = svBrutto / (mindestlohn * gerundeteArbeitstage);
+                stundensatz = gerundeteArbeitstage * totalMean;
+                while (totalMean < 2) {
+                     totalMean = totalMean + 1;
+                }
+                gerundeteArbeitstage = (int) Math.ceil(stundensatz / totalMean);
+                double stundenlohn = mindestlohn;
+                System.out.println("gerundetete Arbeitstage: " + gerundeteArbeitstage);
+                System.out.println("stundenlohn: " + stundenlohn);
+                System.out.println("stundensatz: " + stundensatz);
+                System.out.println("totalMean: " + totalMean);
+                System.out.println("-----------------");
             }
 
-            double gerundeterStundensatz = stundensatz * 10;
-            gerundeterStundensatz = Math.round(gerundeterStundensatz);
-            gerundeterStundensatz = gerundeterStundensatz / 10;
+
+            System.out.println("Alle Local Date's im Monat: " + datenDesMonatsAlt);
+            System.out.println("Alle Local Date's innerhalb Beschäftigungszeitraumes: " + datenDesMonatsAlt);
 
             // Prüfen, ob die Anzahl der Arbeitstage, die "gearbeitet wurden" auch in den Monat passen
             // Das ist nicht der Fall, wenn bspw. der Stundenlohn im Vergleich zum svBrutto sehr niedrig ist
             // und die Person hätte zu viele Stunden bzw. Tage arbeiten müssen, um das zu erreichen.
-            System.out.println("gerundeteArbeitstage: " + gerundeteArbeitstage);
             System.out.println("arbeitszeitenCells.size: " + arbeitszeitenCells.size());
+            System.out.println("arbeitszeitenCells: " + arbeitszeitenCells);
             if (gerundeteArbeitstage > arbeitszeitenCells.size()) {
                 displayErrorInGui("Das Gehalt übersteigt die mögliche Monatsarbeitszeit im Verhältnis zum angegebenen Stundenlohn ");
                 return;
@@ -217,17 +202,22 @@ public class Einzelerstellung {
 
             //Wir erstellen ein Array mit den Arbeitszeiten mit der Größe der Arbeitstage
             double[] arbeitszeiten = Utils.generateRandomNumbers(gerundeteArbeitstage, totalMean, 1);
+
+            System.out.println("arbeitszeiten[gerundeteArbeitstage] vorher: " + Arrays.toString(arbeitszeiten));
+
             double sum = 0;
             for (double value : arbeitszeiten) {
                 sum += value;
             }
             for (int j = 0; j < arbeitszeiten.length; j++) {
-                arbeitszeiten[j] = arbeitszeiten[j] * (gerundeterStundensatz / sum);
+                arbeitszeiten[j] = arbeitszeiten[j] * (stundensatz / sum);
             }
             double sumAfter = 0;
             for (double value : arbeitszeiten) {
                 sumAfter += value;
             }
+
+            System.out.println("arbeitszeiten[gerundeteArbeitstage] nachher: " + Arrays.toString(arbeitszeiten));
 
             //Wir erstellen ein Array in der selben Größe wie arbeitszeitenCells
             String[] werktage = new String[arbeitszeitenCells.size()];
@@ -240,25 +230,27 @@ public class Einzelerstellung {
             for (int i = 0; i < werktage.length; i++) {
                 listOfIndices.add(i);
             }
-            System.out.println(listOfIndices);
+            //System.out.println(listOfIndices);
             Collections.shuffle(listOfIndices);
-            System.out.println(listOfIndices);
+            //System.out.println(listOfIndices);
 
             for (int i = 0; i < arbeitszeiten.length; i++) {
                 werktage[listOfIndices.get(i)] = decimalFormat.format(arbeitszeiten[i]);
-                System.out.println(Arrays.asList(werktage));
-                System.out.println(">> " + tempcounter + " <<");
+//                System.out.println(Arrays.asList(werktage));
+//                System.out.println(">> " + tempcounter + " <<");
             }
+
+            System.out.println("Werktage: " + Arrays.asList(werktage));
 
             double zahl = 0;
-            System.out.println(Arrays.asList(werktage));
-            for (String werktag : werktage) {
-                if (werktag != null) System.out.println(zahl += Double.parseDouble(werktag.replace(",", ".")));
-            }
-            System.out.println(zahl);
-            System.out.println(">> " + tempcounter + " <<");
-
-            System.out.println(arbeitszeitenCells);
+            //System.out.println(Arrays.asList(werktage));
+//            for (String werktag : werktage) {
+//                if (werktag != null) System.out.println(zahl += Double.parseDouble(werktag.replace(",", ".")));
+//            }
+//            System.out.println(zahl);
+//            System.out.println(">> " + tempcounter + " <<");
+//
+//            System.out.println(arbeitszeitenCells);
 
             try {
                 //Wir befüllen die Spalten, Dezimal, Arbeitszeit Netto, Aufgezeichnet am und Arbeitszeit
@@ -276,7 +268,7 @@ public class Einzelerstellung {
                         LocalDate aufgezeichnetAm = arbeitszeitenCells.get(i).getRow().getCell(arbeitszeitenCells.get(i).getColumnIndex() - 2).getLocalDateTimeCellValue().toLocalDate().plusDays(1);
                         DayOfWeek day = aufgezeichnetAm.getDayOfWeek();
                         while (day == DayOfWeek.SUNDAY || Utils.isDatumEinFeiertag(aufgezeichnetAm, Integer.parseInt(datum[0]))) {
-                            System.out.println("Nächster Tag ist " + day);
+                            //System.out.println("Nächster Tag ist " + day);
                             aufgezeichnetAm = aufgezeichnetAm.plusDays(1);
                             day = aufgezeichnetAm.getDayOfWeek();
                         }
@@ -307,6 +299,8 @@ public class Einzelerstellung {
                 System.out.println("Fehler");
             }
 
+            System.out.println("arbeitszeitenCells: " + arbeitszeitenCells);
+
             //Excel-Output-Dateien
             try (FileOutputStream fileOutputStream = new FileOutputStream(outputPath + "\\test" + counter++ + ".xlsx")) {
                 workbook.write(fileOutputStream);
@@ -328,7 +322,7 @@ public class Einzelerstellung {
 
                     PdfGenerator pdfGenerator = new PdfGenerator();
                     pdfGenerator.createPdf(workbook, outputPath, fileName + "_" + count);
-                    System.out.println("PDF file created: " + newFile.getAbsolutePath());
+                    //System.out.println("PDF file created: " + newFile.getAbsolutePath());
                 } else {
                     PdfGenerator pdfGenerator = new PdfGenerator();
                     pdfGenerator.createPdf(workbook, outputPath, fileName);

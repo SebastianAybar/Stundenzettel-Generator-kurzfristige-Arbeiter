@@ -255,7 +255,9 @@ public class Einzelerstellung {
             //System.out.println(listOfIndices);
 
             for (int i = 0; i < arbeitszeiten.length; i++) {
-                werktage[listOfIndices.get(i)] = decimalFormat.format(arbeitszeiten[i]);
+//                werktage[listOfIndices.get(i)] = decimalFormat.format(arbeitszeiten[i]);
+//                werktage[listOfIndices.get(i)] = String.valueOf(Math.floor(arbeitszeiten[i] * 100) / 100);
+                werktage[listOfIndices.get(i)] = decimalFormat.format(Math.floor(arbeitszeiten[i] * 100) / 100);
 //                System.out.println(Arrays.asList(werktage));
 //                System.out.println(">> " + tempcounter + " <<");
             }
@@ -322,9 +324,9 @@ public class Einzelerstellung {
             System.out.println("arbeitszeitenCells: " + arbeitszeitenCells);
 
             //Excel-Output-Dateien
-            try (FileOutputStream fileOutputStream = new FileOutputStream(outputPath + "\\test" + counter++ + ".xlsx")) {
-                workbook.write(fileOutputStream);
-            }
+//            try (FileOutputStream fileOutputStream = new FileOutputStream(outputPath + "\\test" + counter++ + ".xlsx")) {
+//                workbook.write(fileOutputStream);
+//            }
 
             String fileName = abrechnungsmonat.replace("/", "-");
             String filePathWithName = outputPath + "\\" + fileName + DOCUMENT_FILE_SUFFIX;

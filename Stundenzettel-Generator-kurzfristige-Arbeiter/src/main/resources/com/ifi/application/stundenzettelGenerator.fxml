@@ -95,7 +95,7 @@
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="textfieldEintrittsdatum" prefHeight="26.0" prefWidth="165.0" />
+                        <TextField fx:id="textfieldEintrittsdatum" prefHeight="26.0" prefWidth="165.0" promptText="Format: &quot;dd.MM.yyyy&quot;" />
                      </children>
                   </HBox>
           </children>
@@ -122,12 +122,12 @@
             </HBox>
                   <HBox alignment="BOTTOM_LEFT" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Label fx:id="lblAustrittsdatum" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="113.0" text="Austrittsdatum: ">
+                        <Label fx:id="lblAustrittsdatum" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="92.0" text="Austrittsdatum: ">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="textfieldAustrittsdatum" prefHeight="26.0" prefWidth="107.0" />
+                        <TextField fx:id="textfieldAustrittsdatum" prefHeight="26.0" prefWidth="129.0" promptText="Format: &quot;dd.MM.yyyy&quot;" />
                      </children>
                   </HBox>
           </children>
@@ -229,7 +229,7 @@
          <font>
             <Font name="System Italic" size="12.0" />
          </font></Label>
-      <Label fx:id="lblValidationAustrittsdatum" layoutX="490.0" layoutY="159.0" prefHeight="18.0" prefWidth="130.0" text="ungültige Eingabe" textFill="#e10000" visible="false">
+      <Label fx:id="lblValidationAustrittsdatum" layoutX="470.0" layoutY="159.0" prefHeight="18.0" prefWidth="130.0" text="ungültige Eingabe" textFill="#e10000" visible="false">
          <font>
             <Font name="System Italic" size="12.0" />
          </font>

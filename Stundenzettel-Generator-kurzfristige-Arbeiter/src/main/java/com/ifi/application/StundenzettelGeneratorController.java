@@ -186,6 +186,8 @@ public class StundenzettelGeneratorController implements Initializable {
     @FXML
     public void switchToViewExcel() {
         // Textfelder müssen wieder auf valide gesetzt werden
+        setTextfieldValid(textfieldEintrittsdatum, lblValidationEintrittsdatum);
+        setTextfieldValid(textfieldAustrittsdatum, lblValidationAustrittsdatum);
         setTextfieldValid(textfieldAbrechnungsmonat, lblFalschesFormatAbrechnungsmonat);
         setTextfieldValid(textfieldMitarbeiternummer, lblMitarbeiternummerEmpty);
         setTextfieldValid(textfieldSvBrutto, lblFalschesFormatSvBrutto);
@@ -445,43 +447,47 @@ public class StundenzettelGeneratorController implements Initializable {
                                 Einzelerstellung einzelerstellung = new Einzelerstellung(textfieldAbrechnungsmonat.getText(), textfieldMitarbeiternummer.getText(), svBruttoText, textfieldName.getText(), textfieldEintrittsdatum.getText(), textfieldAustrittsdatum.getText());
                                 einzelerstellung.writeToExcel(textfieldOutputPath.getText(), textfieldStundenlohn.getText(), checkboxErsetzen.isSelected());
                             } else {
-                                String abrechnungsmonat_1 = String.format("%d/%02d", eintrittsdatum.getYear(), eintrittsdatum.getMonthValue());
-                                String abrechnungsmonat_2 = String.format("%d/%02d", austrittsdatum.getYear(), austrittsdatum.getMonthValue());
 
-                                //15.01. - 15.02.
+                                if (austrittsdatum.getMonthValue() - eintrittsdatum.getMonthValue() == 1) {
 
-                                LocalDate eintrittsdatum_1 = eintrittsdatum; //eintrittsdatum
-                                LocalDate austrittsdatum_1 = eintrittsdatum.with(TemporalAdjusters.lastDayOfMonth()); //31 //Ende des ersten Monats
-                                int beschaeftigungszeitraum_1 = austrittsdatum_1.getDayOfMonth() - eintrittsdatum_1.getDayOfMonth();
-                                System.out.println(beschaeftigungszeitraum_1);
+                                    String abrechnungsmonat_1 = String.format("%d/%02d", eintrittsdatum.getYear(), eintrittsdatum.getMonthValue());
+                                    String abrechnungsmonat_2 = String.format("%d/%02d", austrittsdatum.getYear(), austrittsdatum.getMonthValue());
 
-                                LocalDate eintrittsdatum_2 = austrittsdatum.with(TemporalAdjusters.firstDayOfMonth()); //Anfang des zweiten Monats
-                                LocalDate austrittsdatum_2 = austrittsdatum; //austrittsdatum
-                                int beschaeftigungszeitraum_2 = austrittsdatum_2.getDayOfMonth() - eintrittsdatum_2.getDayOfMonth();
-                                System.out.println(beschaeftigungszeitraum_2);
+                                    LocalDate eintrittsdatum_1 = eintrittsdatum; //eintrittsdatum
+                                    LocalDate austrittsdatum_1 = eintrittsdatum.with(TemporalAdjusters.lastDayOfMonth()); //31 //Ende des ersten Monats
+                                    int beschaeftigungszeitraum_1 = austrittsdatum_1.getDayOfMonth() - eintrittsdatum_1.getDayOfMonth();
+                                    System.out.println(beschaeftigungszeitraum_1);
 
-                                int beschaeftigungszeitraum_insgesamt = beschaeftigungszeitraum_1 + beschaeftigungszeitraum_2;
+                                    LocalDate eintrittsdatum_2 = austrittsdatum.with(TemporalAdjusters.firstDayOfMonth()); //Anfang des zweiten Monats
+                                    LocalDate austrittsdatum_2 = austrittsdatum; //austrittsdatum
+                                    int beschaeftigungszeitraum_2 = austrittsdatum_2.getDayOfMonth() - eintrittsdatum_2.getDayOfMonth();
+                                    System.out.println(beschaeftigungszeitraum_2);
 
-                                System.out.println(beschaeftigungszeitraum_insgesamt);
-                                System.out.println(svBrutto);
+                                    int beschaeftigungszeitraum_insgesamt = beschaeftigungszeitraum_1 + beschaeftigungszeitraum_2;
 
-                                double svBrutto_1 = svBrutto *  ((double) beschaeftigungszeitraum_1 / beschaeftigungszeitraum_insgesamt);
-                                double svBrutto_2 = svBrutto *  ((double) beschaeftigungszeitraum_2 / beschaeftigungszeitraum_insgesamt);
+                                    System.out.println(beschaeftigungszeitraum_insgesamt);
+                                    System.out.println(svBrutto);
 
-                                System.out.println(svBrutto_1);
-                                System.out.println(svBrutto_2);
-                                System.out.println(svBrutto_1 + svBrutto_2);
+                                    double svBrutto_1 = svBrutto * ((double) beschaeftigungszeitraum_1 / beschaeftigungszeitraum_insgesamt);
+                                    double svBrutto_2 = svBrutto * ((double) beschaeftigungszeitraum_2 / beschaeftigungszeitraum_insgesamt);
 
-                                //Wir setzen den Stundenlohn im Textdokument im home directory und erfolgreiche Schlussnachricht
-                                saveStundenlohnToDatei(textfieldStundenlohn.getText());
-                                setMessageSuccess(lblSchlussnachricht, VALIDATION_SUCCESS_PDF);
+                                    System.out.println(svBrutto_1);
+                                    System.out.println(svBrutto_2);
+                                    System.out.println(svBrutto_1 + svBrutto_2);
 
-                                //Aufruf writeToExcel
-                                Einzelerstellung einzelerstellung = new Einzelerstellung(abrechnungsmonat_1, textfieldMitarbeiternummer.getText(), String.valueOf(svBrutto_1), textfieldName.getText(), eintrittsdatum_1.format(formatter), austrittsdatum_1.format(formatter));
-                                einzelerstellung.writeToExcel(textfieldOutputPath.getText(), textfieldStundenlohn.getText(), checkboxErsetzen.isSelected());
+                                    //Wir setzen den Stundenlohn im Textdokument im home directory und erfolgreiche Schlussnachricht
+                                    saveStundenlohnToDatei(textfieldStundenlohn.getText());
+                                    setMessageSuccess(lblSchlussnachricht, VALIDATION_SUCCESS_PDF);
 
-                                einzelerstellung = new Einzelerstellung(abrechnungsmonat_2, textfieldMitarbeiternummer.getText(), String.valueOf(svBrutto_2), textfieldName.getText(), eintrittsdatum_2.format(formatter), austrittsdatum_2.format(formatter));
-                                einzelerstellung.writeToExcel(textfieldOutputPath.getText(), textfieldStundenlohn.getText(), checkboxErsetzen.isSelected());
+                                    //Aufruf writeToExcel
+                                    Einzelerstellung einzelerstellung = new Einzelerstellung(abrechnungsmonat_1, textfieldMitarbeiternummer.getText(), String.valueOf(svBrutto_1), textfieldName.getText(), eintrittsdatum_1.format(formatter), austrittsdatum_1.format(formatter));
+                                    einzelerstellung.writeToExcel(textfieldOutputPath.getText(), textfieldStundenlohn.getText(), checkboxErsetzen.isSelected());
+
+                                    einzelerstellung = new Einzelerstellung(abrechnungsmonat_2, textfieldMitarbeiternummer.getText(), String.valueOf(svBrutto_2), textfieldName.getText(), eintrittsdatum_2.format(formatter), austrittsdatum_2.format(formatter));
+                                    einzelerstellung.writeToExcel(textfieldOutputPath.getText(), textfieldStundenlohn.getText(), checkboxErsetzen.isSelected());
+                                } else {
+                                    setMessageFailed(lblSchlussnachricht, "Beschäftigungszeitraum zu groß.");
+                                }
                             }
                         } else {
                             setMessageFailed(lblSchlussnachricht, VALIDATION_LESS_SVBRUTTO);

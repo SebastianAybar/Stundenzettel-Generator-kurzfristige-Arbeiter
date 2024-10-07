@@ -292,7 +292,7 @@ public class StundenzettelGeneratorController implements Initializable {
                 //System.out.println("INFO: Excel-Datei wurde erfolgreich eingelesen. Mitarbeiter-Objekte wurden erstellt");
 
                 ExcelListeWriter excelListeWriter = new ExcelListeWriter(textfieldOutputPath.getText());
-                excelListeWriter.writeToExcel(jahresliste, Double.parseDouble(textfieldStundenlohn.getText().replace(",", ".")));
+                excelListeWriter.writeToExcel(jahresliste, textfieldStundenlohn.getText());
 
                 setMessageSuccess(lblSchlussnachricht, VALIDATION_SUCCESS_PDF);
 
@@ -522,5 +522,7 @@ public class StundenzettelGeneratorController implements Initializable {
 
 //        textfieldInputPath.setText("C:\\Users\\MM\\Desktop\\neue_excel_kurzarbeiter\\KFB_0124.xlsx");
 //        textfieldOutputPath.setText("C:\\Users\\MM\\Desktop\\neue_excel_kurzarbeiter\\generierte_Dateien");
+        textfieldInputPath.setText("C:\\Users\\sebas\\OneDrive\\Dokumente\\GitHub\\Stundenzettel-Generator-kurzfristige-Arbeiter\\Dateien\\KFB_0124.xlsx");
+        textfieldOutputPath.setText("C:\\Users\\sebas\\OneDrive\\Dokumente\\GitHub\\Stundenzettel-Generator-kurzfristige-Arbeiter\\Dateien\\test output");
     }
 }

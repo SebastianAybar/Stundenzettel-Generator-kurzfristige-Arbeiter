@@ -130,7 +130,6 @@ public class Einzelerstellung {
                             } else {
                                 cell.setCellValue("");
                             }
-
                         }
 
 

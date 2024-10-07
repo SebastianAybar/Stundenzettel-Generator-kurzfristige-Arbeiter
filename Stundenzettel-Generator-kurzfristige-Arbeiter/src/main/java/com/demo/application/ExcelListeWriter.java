@@ -24,25 +24,40 @@ public class ExcelListeWriter {
         this.outputPath = outputPath;
     }
 
-    public void writeToExcel(List<List<MitarbeiterMonat>> jahresliste, double lohn) {
+    public void writeToExcel(List<List<MitarbeiterMonat>> jahresliste, String lohn) {
         int counter = 1;
 
         for (List<MitarbeiterMonat> monatsliste : jahresliste) {
+
             Workbook workbook = null;
 
             try {
-                InputStream fileStundenzettelVorlageLocal = new FileInputStream(PATH_FILE_STUNDENZETTEL_VORLAGE_LOCAL);
 
+                InputStream fileStundenzettelVorlageLocal = new FileInputStream(PATH_FILE_STUNDENZETTEL_VORLAGE_LOCAL);
                 workbook = WorkbookFactory.create(fileStundenzettelVorlageLocal);
                 Sheet currentSheet = workbook.getSheetAt(0);
 
                 for (int i = 0; i < monatsliste.size(); i++) {
+
                     workbook.cloneSheet(0);
                     currentSheet = workbook.getSheetAt(i + 1);
-                    String[] datum = monatsliste.get(i).getAbrechnungsmonat().split("/");
-                    List<LocalDate> alleTageDesMonats = getAlleTageDesMonatsAlt(datum);
+
+                    //Liste der Zellen in Spalte "Dezimal" in der Vorlage
                     List<Cell> arbeitszeitenCells = new ArrayList<>();
+
+                    //Liste aller LocalDate's im Monat
+                    String[] datum = monatsliste.get(i).getAbrechnungsmonat().split("/");
+                    List<LocalDate> alleTageDesMonatsAlt = getAlleTageDesMonatsAlt(datum);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+                    DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd-MMM-uuuu");
+                    LocalDate eintrittsdatum = LocalDate.parse(monatsliste.get(i).getEintrittsdatum(), formatter2);
+                    LocalDate austrittsdatum = LocalDate.parse(monatsliste.get(i).getAustrittsdatum(), formatter2);
+                    List<LocalDate> alleTageDesMonats = getAlleTageDesMonats(datum, eintrittsdatum.format(formatter), austrittsdatum.format(formatter));
+
+
                     int counterTage = 0;
+
+                    //Sofern der Monat weniger als 31 Tage hat, müssen Zeilen entfernt werden
                     List<Row> rowsToRemove = new ArrayList<>();
 
                     for (Row row : currentSheet) {
@@ -61,18 +76,18 @@ public class ExcelListeWriter {
                                     cell.setCellValue(monatsliste.get(i).getMandant());
                                 }
                                 if (cellValue.startsWith("<<Tag")) {
-                                    if (counterTage < alleTageDesMonats.size()) {
+                                    if (counterTage < alleTageDesMonatsAlt.size()) {
 //                                        Wir befüllen die Spalte Datum
-                                        cell.setCellValue(alleTageDesMonats.get(counterTage));
+                                        cell.setCellValue(alleTageDesMonatsAlt.get(counterTage));
 //                                        Wir befüllen die Spalte KW
-                                        cell.getRow().getCell(cell.getColumnIndex() - 2).setCellValue(alleTageDesMonats.get(counterTage).get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
+                                        cell.getRow().getCell(cell.getColumnIndex() - 2).setCellValue(alleTageDesMonatsAlt.get(counterTage).get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
 //                                        Wir befüllen die Spalte Wochentag
                                         DateTimeFormatter deutschFormatierer = DateTimeFormatter.ofPattern("EEEE", Locale.GERMAN);
-                                        String wochentag = alleTageDesMonats.get(counterTage).format(deutschFormatierer);
+                                        String wochentag = alleTageDesMonatsAlt.get(counterTage).format(deutschFormatierer);
                                         Cell wochentagCell = cell.getRow().getCell(cell.getColumnIndex() - 1);
                                         wochentagCell.setCellValue(wochentag);
 //                                        Wir markieren und leeren die Sonn- und Feiertage
-                                        if (wochentag.equals("Sonntag") || isDatumEinFeiertag(alleTageDesMonats.get(counterTage), Integer.parseInt(datum[0]))) {
+                                        if (wochentag.equals("Sonntag") || isDatumEinFeiertag(alleTageDesMonatsAlt.get(counterTage), Integer.parseInt(datum[0]))) {
                                             markiereRowAlsFreienTag(workbook, row, cell);
                                         }
                                         counterTage++;
@@ -82,10 +97,14 @@ public class ExcelListeWriter {
                                     }
                                 }
                                 if (cellValue.startsWith("<<Std")) {
-                                    arbeitszeitenCells.add(cell);
+                                    if (counterTage > 0 && counterTage < alleTageDesMonatsAlt.size() && alleTageDesMonats.contains(alleTageDesMonatsAlt.get(counterTage - 1))) {
+                                        arbeitszeitenCells.add(cell);
+                                    } else {
+                                        cell.setCellValue("");
+                                    }
                                 }
                             } else {
-//                                System.out.println("Aktuelle Zelle (" + cell.getRowIndex() + ", " + cell.getColumnIndex() + ") aus der Stundenzettel-Vorlage enthält kein <tag>. Wird übersprungen.");
+                                //System.out.println("Aktuelle Zelle (" + cell.getRowIndex() + ", " + cell.getColumnIndex() + ") aus der Stundenzettel-Vorlage enthält kein <tag>. Wird übersprungen.");
                             }
                         }
                     }
@@ -94,65 +113,76 @@ public class ExcelListeWriter {
                         currentSheet.removeRow(row);
                     }
 
-//                    vor irgendeinem Case
+
+
+                    //Wir berechnen die Variablen totalMean, gerundeteArbeitstage und den Stundensatz für die Normalverteilung
                     double svBrutto = Double.parseDouble(monatsliste.get(i).getSvBrutto().replace(",", "."));
+                    double mindestlohn = Double.parseDouble(lohn.replace(",", "."));
+
                     double stundensatz = 0;
                     int gerundeteArbeitstage = 0;
                     double totalMean = 0;
 
-//                    ---------------------Case 1
-                    if (svBrutto <= 1500) {
-                        double stundenlohn = lohn;
-                        stundensatz = svBrutto / stundenlohn;
-                        double meanProportionPerEuro = 2.5 / 520;
-
-                        if (svBrutto <= 520) {
-                            totalMean = 2.5;
-                        } else {
-                            totalMean = meanProportionPerEuro * svBrutto;
-                        }
-
-                        double arbeitstage = stundensatz / totalMean;
-                        gerundeteArbeitstage = (int) Math.round(arbeitstage);
-                        if (gerundeteArbeitstage == 0) gerundeteArbeitstage = 1;
-                        System.out.println("gerundetete Arbeitstage: " + gerundeteArbeitstage);
-                        System.out.println("stundenlohn: " + stundenlohn);
-                        System.out.println("stundensatz: " + stundensatz);
-
-                    }
-
-//                    ---------------------Case 2
-
+                    int randomArbeitstage;
                     Random random = new Random();
-                    int randomArbeitstage = 18 + random.nextInt(6); //Das machen wir, damit nicht jeder Mitarbeiter die exakt gleiche Anzahl an Werktagen im selben Monat gearbeitet hat
-                    double svBruttoGrenze = 8 * lohn * randomArbeitstage; //Diese Variable brauchen wir um zu wissen wann wir in den 3. Case müssen
 
-                    if(svBrutto > 1500 && svBrutto < svBruttoGrenze) {
-                        gerundeteArbeitstage = randomArbeitstage;
-                        totalMean = svBrutto / (gerundeteArbeitstage * lohn);
-                        stundensatz = totalMean * gerundeteArbeitstage;
-                        double stundenlohn = svBrutto / stundensatz;
-                        System.out.println("gerundetete Arbeitstage: " + gerundeteArbeitstage);
-                        System.out.println("stundenlohn: " + stundenlohn);
-                        System.out.println("stundensatz: " + stundensatz);
+                    if (arbeitszeitenCells.size() > 5) {
+                        int min = arbeitszeitenCells.size() - 3;
+                        int max = arbeitszeitenCells.size();
+                        randomArbeitstage = random.nextInt(max - min) + min; //Anzahl der Arbeitstage
+                    } else {
+                        randomArbeitstage = arbeitszeitenCells.size();
                     }
 
-//                    ---------------------Case 3
-                    if(svBrutto >= svBruttoGrenze) {
+                    double svBruttoGrenze = 8 * mindestlohn * randomArbeitstage; //Diese Variable brauchen wir um zu wissen wann wir in den 3. Case müssen
+
+                    System.out.println("-----------------");
+                    System.out.println("svBrutto: " + svBrutto);
+
+
+                    //Wenn svBrutto die Grenze übersteigt
+                    if (svBrutto >= svBruttoGrenze) {
                         totalMean = 6.5 + (random.nextDouble() * 1.5); //Damit nicht jeder Mitarbeiter exakt 8h durchschnittliche Arbeitszeit hat
-                        gerundeteArbeitstage = randomArbeitstage;
+                        gerundeteArbeitstage = randomArbeitstage; //Anzahl der Arbeitstage
                         stundensatz = gerundeteArbeitstage * totalMean;
                         double stundenlohn = svBrutto / stundensatz;
                         System.out.println("gerundetete Arbeitstage: " + gerundeteArbeitstage);
                         System.out.println("stundenlohn: " + stundenlohn);
                         System.out.println("stundensatz: " + stundensatz);
                         System.out.println("totalMean: " + totalMean);
+                        System.out.println("-----------------");
+
+                        if (stundenlohn > 150) {
+                            gerundeteArbeitstage = arbeitszeitenCells.size();
+                            totalMean = 8; //Damit nicht jeder Mitarbeiter exakt 8h durchschnittliche Arbeitszeit hat
+                            stundensatz = gerundeteArbeitstage * totalMean;
+                            stundenlohn = svBrutto / stundensatz;
+                            if(stundenlohn > 150) {
+                                DecimalFormat df = new DecimalFormat("#.00");
+                                displayErrorInGui("Stundenlohn liegt bei: " + df.format(stundenlohn) + "€.\n" + "Brutto ist zu hoch für den Beschäfigungszeitraum.");
+                                return;
+                            }
+                        }
+                    } else { //Wenn svBrutto unter der Grenze liegt
+                        gerundeteArbeitstage = randomArbeitstage;
+                        totalMean = svBrutto / (mindestlohn * gerundeteArbeitstage);
+                        stundensatz = gerundeteArbeitstage * totalMean;
+                        while (totalMean < 2) {
+                            totalMean = totalMean + 1;
+                        }
+                        gerundeteArbeitstage = (int) Math.ceil(stundensatz / totalMean);
+                        double stundenlohn = mindestlohn;
+                        System.out.println("gerundetete Arbeitstage: " + gerundeteArbeitstage);
+                        System.out.println("stundenlohn: " + stundenlohn);
+                        System.out.println("stundensatz: " + stundensatz);
+                        System.out.println("totalMean: " + totalMean);
+                        System.out.println("-----------------");
                     }
 
-                    double gerundeterStundensatz = stundensatz * 10;
-                    gerundeterStundensatz = Math.round(gerundeterStundensatz);
-                    gerundeterStundensatz = gerundeterStundensatz / 10;
-                    System.out.println("gerundeter stundensatz: " + gerundeterStundensatz);
+
+                    System.out.println("Alle Local Date's im Monat: " + alleTageDesMonatsAlt);
+                    System.out.println("Alle Local Date's innerhalb Beschäftigungszeitraumes: " + alleTageDesMonats);
+
 
 
 //                     Prüfen, ob die Anzahl der Arbeitstage, die "gearbeitet wurden" auch in den Monat passen
@@ -170,7 +200,7 @@ public class ExcelListeWriter {
                         sum += value;
                     }
                     for (int j = 0; j < arbeitszeiten.length; j++) {
-                        arbeitszeiten[j] = arbeitszeiten[j] * (gerundeterStundensatz / sum);
+                        arbeitszeiten[j] = arbeitszeiten[j] * (stundensatz / sum);
                     }
                     double sumAfter = 0;
                     for (double value : arbeitszeiten) {
@@ -272,6 +302,7 @@ public class ExcelListeWriter {
 
             } catch (Exception e) {
                 System.out.println("Error in writeToExcel(): " + e);
+                e.printStackTrace();
             }
         }
     }

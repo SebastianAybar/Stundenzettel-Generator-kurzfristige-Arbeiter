@@ -294,8 +294,8 @@ public class ExcelListeWriter {
                                 hourMinutes = hourMinutes + "0" + stunden + ":";
                                 if (minuten >= 10) hourMinutes += String.valueOf(minuten).split("\\.")[0];
                                 else hourMinutes += "0" + String.valueOf(minuten).split("\\.")[0];
-                                if (sekunden >= 10) hourMinutes += ":" + (int) sekunden;
-                                else hourMinutes += ":" + "0" + (int) sekunden;
+                                /*if (sekunden >= 10) hourMinutes += ":" + (int) sekunden;
+                                else hourMinutes += ":" + "0" + (int) sekunden;*/
 
                                 arbeitszeitenCells.get(k).getRow().getCell(arbeitszeitenCells.get(k).getColumnIndex() - 1).setCellValue(hourMinutes);
                             } else {

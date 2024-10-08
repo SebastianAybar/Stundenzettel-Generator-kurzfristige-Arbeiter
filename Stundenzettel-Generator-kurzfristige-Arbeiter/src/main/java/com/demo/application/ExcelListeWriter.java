@@ -581,7 +581,7 @@ public class ExcelListeWriter {
                 stundenlohn = svBrutto / stundensatz;
                 if(stundenlohn > 150) {
                     DecimalFormat df = new DecimalFormat("#.00");
-                    displayErrorInGui("Stundenlohn liegt bei: " + df.format(stundenlohn) + "€.\n" + "Brutto ist zu hoch für den Beschäfigungszeitraum.");
+                    displayErrorInGui("Stundenlohn liegt bei: " + df.format(stundenlohn) + "€.\n" + "Brutto von " + monatsliste.get(i).getNachnameVorname() + " ist zu hoch für den Beschäfigungszeitraum.");
                     return;
                 }
             }

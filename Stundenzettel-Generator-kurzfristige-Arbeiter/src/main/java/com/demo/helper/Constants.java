@@ -65,8 +65,8 @@ public class Constants {
     public static final String TITLE_NAME = "Stundenzettel";
     public static final int TITLE_FONT_SIZE = 17;
     public static final Font TITLE_FONT = new Font(Font.FontFamily.HELVETICA, TITLE_FONT_SIZE, Font.BOLD);
-    public static final int TITLE_SPACING_BEFORE = 60;
-    public static final int TITLE_SPACING_AFTER = 55;
+    public static final int TITLE_SPACING_BEFORE = 50;
+    public static final int TITLE_SPACING_AFTER = 45;
     public static final int TITLE_INDENTATION_LEFT = 60;
 
     public static final int LOGO_SCALE_PERCENT = 35;
@@ -101,6 +101,14 @@ public class Constants {
     public static final int COLUMN_JAHRMONAT_TEXT = 5;
     public static final int ROW_JAHRMONAT = 2;
     public static final int COLUMN_JAHRMONAT = 6;
+    public static final int ROW_EINTRITTSDATUM_TEXT = 3;
+    public static final int COLUMN_EINTRITTSDATUM_TEXT = 0;
+    public static final int ROW_EINTRITTSDATUM = 3;
+    public static final int COLUMN_EINTRITTSDATUM = 3;
+    public static final int ROW_AUSTRITTSDATUM_TEXT = 4;
+    public static final int COLUMN_AUSTRITTSDATUM_TEXT = 0;
+    public static final int ROW_AUSTRITTSDATUM = 4;
+    public static final int COLUMN_AUSTRITTSDATUM = 3;
 
     public static final int ROW_KOPFZEILE = 5;
     public static final int COLUMN_KW = 0;

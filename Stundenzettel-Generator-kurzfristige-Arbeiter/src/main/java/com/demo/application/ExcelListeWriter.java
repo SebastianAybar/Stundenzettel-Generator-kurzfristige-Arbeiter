@@ -454,10 +454,12 @@ public class ExcelListeWriter {
                         cell.setCellValue(monatsliste.get(i).getAbrechnungsmonat());
                     }
                     if (cellValue.equals("<<Eintrittsdatum>>")) {
-                        cell.setCellValue(monatsliste.get(i).getEintrittsdatum());
+//                        cell.setCellValue(monatsliste.get(i).getEintrittsdatum());
+                        cell.setCellValue(eintrittsdatum.format(formatter));
                     }
                     if (cellValue.equals("<<Austrittsdatum>>")) {
-                        cell.setCellValue(monatsliste.get(i).getAustrittsdatum());
+//                        cell.setCellValue(monatsliste.get(i).getAustrittsdatum());
+                        cell.setCellValue(austrittsdatum.format(formatter));
                     }
                     if (cellValue.equals("<<Mitarbeiter>>")) {
                         cell.setCellValue(monatsliste.get(i).getNachnameVorname());

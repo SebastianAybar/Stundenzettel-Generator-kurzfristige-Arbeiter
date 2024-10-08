@@ -46,15 +46,15 @@ public class PdfGenerator {
 //                    InputStream resourceStream = ExcelListeWriter.class.getResourceAsStream(resourceFilePath);
 //
 //                    if (resourceStream == null) {
-//                        System.err.println("Image file not found in resources: " + resourceFilePath);
+//                        System.err.println("Das bild konnte nicht im Jar-Path gefunden werden: " + resourceFilePath);
 //                        return;
 //                    }
 //
-//                     Create the destination path in the home directory
+////                     Create the destination path in the home directory
 //                    Path destinationPath = Paths.get(PATH_FILE_LOGO_LOCAL);
 //
 //                    if (!Files.exists(destinationPath)) {
-//                         Copy the file from resources to the home directory
+////                         Copy the file from resources to the home directory
 //                        Files.copy(resourceStream, destinationPath, StandardCopyOption.REPLACE_EXISTING);
 //                        System.out.println("Logo wurde kopiert zu " + destinationPath);
 //                    } else {
@@ -117,6 +117,7 @@ public class PdfGenerator {
         mitarbeiterinfoTabelle.setHorizontalAlignment(Element.ALIGN_LEFT);
         mitarbeiterinfoTabelle.setSpacingAfter(TBL_MITARBEITERINFO_SPACING_AFTER);
 
+        // Reihe 1
         PdfPCell zelle = new PdfPCell();
         zelle.setBorder(CELL_BORDER_TRANSPARENT);
         mitarbeiterinfoTabelle.addCell(zelle);
@@ -129,6 +130,7 @@ public class PdfGenerator {
         zelle.setBorder(CELL_BORDER_TRANSPARENT);
         mitarbeiterinfoTabelle.addCell(zelle);
 
+        // Reihe 2
         zelle = new PdfPCell();
         zelle.setBorder(CELL_BORDER_TRANSPARENT);
         mitarbeiterinfoTabelle.addCell(zelle);
@@ -141,6 +143,7 @@ public class PdfGenerator {
         zelle.setBorder(CELL_BORDER_TRANSPARENT);
         mitarbeiterinfoTabelle.addCell(zelle);
 
+        // Reihe 3
         zelle = new PdfPCell();
         zelle.setBorder(CELL_BORDER_TRANSPARENT);
         mitarbeiterinfoTabelle.addCell(zelle);
@@ -150,6 +153,32 @@ public class PdfGenerator {
         mitarbeiterinfoTabelle.addCell(zelle);
 
         zelle = new PdfPCell(new Paragraph(sheet.getRow(ROW_JAHRMONAT).getCell(COLUMN_JAHRMONAT).getStringCellValue(), TBL_MITARBEITERINFO_FONT));
+        zelle.setBorder(CELL_BORDER_TRANSPARENT);
+        mitarbeiterinfoTabelle.addCell(zelle);
+
+        // Reihe 4
+        zelle = new PdfPCell();
+        zelle.setBorder(CELL_BORDER_TRANSPARENT);
+        mitarbeiterinfoTabelle.addCell(zelle);
+
+        zelle = new PdfPCell(new Paragraph(sheet.getRow(ROW_EINTRITTSDATUM_TEXT).getCell(COLUMN_EINTRITTSDATUM_TEXT).getStringCellValue(), TBL_MITARBEITERINFO_FETT_FONT));
+        zelle.setBorder(CELL_BORDER_TRANSPARENT);
+        mitarbeiterinfoTabelle.addCell(zelle);
+
+        zelle = new PdfPCell(new Paragraph(sheet.getRow(ROW_EINTRITTSDATUM).getCell(COLUMN_EINTRITTSDATUM).getStringCellValue(), TBL_MITARBEITERINFO_FONT));
+        zelle.setBorder(CELL_BORDER_TRANSPARENT);
+        mitarbeiterinfoTabelle.addCell(zelle);
+
+        // Reihe 5
+        zelle = new PdfPCell();
+        zelle.setBorder(CELL_BORDER_TRANSPARENT);
+        mitarbeiterinfoTabelle.addCell(zelle);
+
+        zelle = new PdfPCell(new Paragraph(sheet.getRow(ROW_AUSTRITTSDATUM_TEXT).getCell(COLUMN_AUSTRITTSDATUM_TEXT).getStringCellValue(), TBL_MITARBEITERINFO_FETT_FONT));
+        zelle.setBorder(CELL_BORDER_TRANSPARENT);
+        mitarbeiterinfoTabelle.addCell(zelle);
+
+        zelle = new PdfPCell(new Paragraph(sheet.getRow(ROW_AUSTRITTSDATUM).getCell(COLUMN_AUSTRITTSDATUM).getStringCellValue(), TBL_MITARBEITERINFO_FONT));
         zelle.setBorder(CELL_BORDER_TRANSPARENT);
         mitarbeiterinfoTabelle.addCell(zelle);
 

@@ -7,6 +7,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import jdk.jshell.spi.ExecutionControl;
 import org.apache.poi.ss.usermodel.*;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -87,7 +88,14 @@ public class PdfGenerator {
             System.out.println("---------------------------");
             System.out.println("Successful.");
         } catch (Exception e) {
-            displayErrorInGui("Es konnten keine Stundenzettel für den Abrechnungsmonat " + filename + " generiert werden.");
+            displayErrorInGui("Es konnten keine Stundenzettel für den Abrechnungsmonat \" + filename + \" generiert werden.");
+            try {
+                File file = new File(outputPath + "\\" + filename + DOCUMENT_FILE_SUFFIX);
+                System.out.println("FILEPATH + NAME: " + file.getAbsolutePath());
+                if (file.exists()) file.delete();
+            } catch (Exception exception) {
+                System.out.println("Fehler beim Löschen der fehlerhaft-generierten PDF-Datei. Check code");
+            }
         }
 
     }

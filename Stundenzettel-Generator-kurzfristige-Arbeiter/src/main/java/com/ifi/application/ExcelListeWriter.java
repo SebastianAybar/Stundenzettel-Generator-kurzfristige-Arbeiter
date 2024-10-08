@@ -2,6 +2,7 @@ package com.demo.application;
 
 import org.apache.poi.ss.usermodel.*;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -14,8 +15,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 import java.util.*;
 
-import static com.demo.helper.Constants.PATH_FILE_STUNDENZETTEL_VORLAGE_LOCAL;
-import static com.demo.helper.Constants.VALIDATION_LESS_SVBRUTTO;
+import static com.demo.helper.Constants.*;
 import static com.demo.helper.Utils.*;
 import static com.demo.helper.Validation.displayErrorInGui;
 
@@ -27,7 +27,7 @@ public class ExcelListeWriter {
         this.outputPath = outputPath;
     }
 
-    public void writeToExcel(List<List<MitarbeiterMonat>> jahresliste, String lohn) {
+    public void writeToExcel(List<List<MitarbeiterMonat>> jahresliste, String lohn, boolean isErsetzenSelected) {
         int counter = 1;
 
         for (int k = 0; k < jahresliste.size(); k++) {
@@ -415,13 +415,43 @@ public class ExcelListeWriter {
                 workbook.removeSheetAt(0);
 
                 //Excel-Output-Dateien
-                try (FileOutputStream fileOutputStream = new FileOutputStream(outputPath + "\\test" + counter++ + ".xlsx")) {
-                    workbook.write(fileOutputStream);
+//                try (FileOutputStream fileOutputStream = new FileOutputStream(outputPath + "\\test" + counter++ + ".xlsx")) {
+//                    workbook.write(fileOutputStream);
+//                }
+
+
+                String fileName = monatsliste.get(0).getAbrechnungsmonat().replace("/", "-");
+                String filePathWithName = outputPath + "\\" + fileName + DOCUMENT_FILE_SUFFIX;
+
+                if (!isErsetzenSelected) {
+                    File pdfFile = new File(filePathWithName);
+                    if (pdfFile.exists()) {
+
+                        int count = 0;
+
+                        File newFile;
+                        do {
+                            count++;
+                            String newFileName = outputPath + "\\" + fileName + "_" + count + DOCUMENT_FILE_SUFFIX;
+                            newFile = new File(newFileName);
+                        } while (newFile.exists());
+
+                        PdfGenerator pdfGenerator = new PdfGenerator();
+                        pdfGenerator.createPdf(workbook, outputPath, fileName + "_" + count);
+                        System.out.println("PDF file created: " + newFile.getAbsolutePath());
+                    } else {
+                        PdfGenerator pdfGenerator = new PdfGenerator();
+                        pdfGenerator.createPdf(workbook, outputPath, fileName);
+                    }
+                } else {
+                    PdfGenerator pdfGenerator = new PdfGenerator();
+                    pdfGenerator.createPdf(workbook, outputPath, monatsliste.get(0).getAbrechnungsmonat().replace("/", "-"));
                 }
 
+
                 // PDF-Output-Dateien generieren
-                PdfGenerator pdfGenerator = new PdfGenerator();
-                pdfGenerator.createPdf(workbook, outputPath, monatsliste.get(0).getAbrechnungsmonat().replace("/", "-"));
+//                PdfGenerator pdfGenerator = new PdfGenerator();
+//                pdfGenerator.createPdf(workbook, outputPath, monatsliste.get(0).getAbrechnungsmonat().replace("/", "-"));
 
 
             } catch (Exception e) {

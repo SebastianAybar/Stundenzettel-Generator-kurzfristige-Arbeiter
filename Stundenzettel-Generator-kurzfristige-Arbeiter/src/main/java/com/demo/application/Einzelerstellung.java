@@ -92,6 +92,14 @@ public class Einzelerstellung {
                         if (cellValue.equals("<<Abrechnungsmonat>>")) {
                             cell.setCellValue(abrechnungsmonat);
                         }
+                        if (cellValue.equals("<<Eintrittsdatum>>")) {
+//                        cell.setCellValue(monatsliste.get(i).getEintrittsdatum());
+                            cell.setCellValue(eintrittsdatum);
+                        }
+                        if (cellValue.equals("<<Austrittsdatum>>")) {
+//                        cell.setCellValue(monatsliste.get(i).getAustrittsdatum());
+                            cell.setCellValue(austrittsdatum);
+                        }
                         if (cellValue.equals("<<Mitarbeiter>>")) {
                             cell.setCellValue(name);
                         }

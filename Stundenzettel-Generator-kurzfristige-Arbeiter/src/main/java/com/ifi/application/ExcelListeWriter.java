@@ -22,6 +22,8 @@ import static com.demo.helper.Validation.displayErrorInGui;
 public class ExcelListeWriter {
 
     private final String outputPath;
+    private int counterSheets;
+    private boolean alleValidationsErfolgreich;
 
     public ExcelListeWriter(String outputPath) {
         this.outputPath = outputPath;
@@ -41,8 +43,8 @@ public class ExcelListeWriter {
                 workbook = WorkbookFactory.create(fileStundenzettelVorlageLocal);
                 Sheet currentSheet = workbook.getSheetAt(0);
 
-                int counterSheets = -1; // -1 für den ersten Durchgang, der immer true ist (damits bei 0 anfängt)
-                boolean alleValidationsErfolgreich = true;
+                counterSheets = -1; // -1 für den ersten Durchgang, der immer true ist (damits bei 0 anfängt)
+                alleValidationsErfolgreich = true;
 
                 for (int i = 0; i < monatsliste.size(); i++) {
                     if (alleValidationsErfolgreich) counterSheets++;
@@ -410,9 +412,9 @@ public class ExcelListeWriter {
                 workbook.removeSheetAt(0);
 
                 //Excel-Output-Dateien
-//                try (FileOutputStream fileOutputStream = new FileOutputStream(outputPath + "\\test" + counter++ + ".xlsx")) {
-//                    workbook.write(fileOutputStream);
-//                }
+                try (FileOutputStream fileOutputStream = new FileOutputStream(outputPath + "\\test" + counter++ + ".xlsx")) {
+                    workbook.write(fileOutputStream);
+                }
 
 
                 String fileName = monatsliste.get(0).getAbrechnungsmonat().replace("/", "-");
@@ -563,6 +565,7 @@ public class ExcelListeWriter {
             gerundeteArbeitstage = randomArbeitstage; //Anzahl der Arbeitstage
             stundensatz = gerundeteArbeitstage * totalMean;
             double stundenlohn = svBrutto / stundensatz;
+            System.out.println("Name: " + monatsliste.get(i).getNachnameVorname());
             System.out.println("gerundetete Arbeitstage: " + gerundeteArbeitstage);
             System.out.println("stundenlohn: " + stundenlohn);
             System.out.println("stundensatz: " + stundensatz);
@@ -577,6 +580,8 @@ public class ExcelListeWriter {
                 if(stundenlohn > 150) {
                     DecimalFormat df = new DecimalFormat("#.00");
                     displayErrorInGui("Stundenlohn liegt bei: " + df.format(stundenlohn) + "€.\n" + "Brutto von " + monatsliste.get(i).getNachnameVorname() + " ist zu hoch für den Beschäfigungszeitraum.");
+                    workbook.removeSheetAt(counterSheets+1);
+                    alleValidationsErfolgreich = false;
                     return;
                 }
             }
@@ -589,6 +594,7 @@ public class ExcelListeWriter {
             }
             gerundeteArbeitstage = (int) Math.ceil(stundensatz / totalMean);
             double stundenlohn = mindestlohn;
+            System.out.println("Name: " + monatsliste.get(i).getNachnameVorname());
             System.out.println("gerundetete Arbeitstage: " + gerundeteArbeitstage);
             System.out.println("stundenlohn: " + stundenlohn);
             System.out.println("stundensatz: " + stundensatz);

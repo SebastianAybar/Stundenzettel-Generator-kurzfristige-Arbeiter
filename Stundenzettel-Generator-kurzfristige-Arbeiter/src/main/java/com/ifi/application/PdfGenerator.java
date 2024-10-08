@@ -89,6 +89,7 @@ public class PdfGenerator {
             System.out.println("Successful.");
         } catch (Exception e) {
             displayErrorInGui("Es konnten keine Stundenzettel für den Abrechnungsmonat " + filename + " generiert werden.");
+//            e.printStackTrace();
             try {
                 File file = new File(outputPath + "\\" + filename + DOCUMENT_FILE_SUFFIX);
                 System.out.println("FILEPATH + NAME: " + file.getAbsolutePath());

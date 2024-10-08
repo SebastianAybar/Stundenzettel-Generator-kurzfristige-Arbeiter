@@ -165,7 +165,7 @@ public class ExcelListeWriter {
                             continue;
                         }
                     } else {
-                        displayErrorInGui("Der Beschäftigungszeitraum des Mitarbeiters \"" + monatsliste.get(i).getNachnameVorname() + "\" liegt nicht im angegebenen Abrechnungsmonat.\nDer Mitarbeiter wird übersprungen.");
+                        displayErrorInGui("Der Beschäftigungszeitraum von \"" + monatsliste.get(i).getNachnameVorname() + "\" liegt nicht im angegebenen Abrechnungsmonat.");
                         alleValidationsErfolgreich = false;
                         workbook.removeSheetAt(counterSheets + 1);
                         continue;

@@ -11,6 +11,7 @@ module com.demo.application {
     requires commons.math3;
     requires itextpdf;
     requires org.apache.commons.lang3;
+    requires jdk.jshell;
 
     opens com.demo.application to javafx.fxml;
     exports com.demo.application;

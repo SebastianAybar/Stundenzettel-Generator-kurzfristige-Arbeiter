@@ -4,6 +4,7 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import jdk.jshell.spi.ExecutionControl;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.FileOutputStream;
@@ -19,6 +20,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 import static com.demo.helper.Constants.*;
+import static com.demo.helper.Validation.displayErrorInGui;
 
 public class PdfGenerator {
 
@@ -76,14 +78,16 @@ public class PdfGenerator {
                 document.add(stundenTabelle);
             }
 
+//            if (document.getPageNumber() <= 0) {
+//                displayErrorInGui("Es konnten keine Stundenzettel für den Abrechnungsmonat generiert werden, da keine gültigen Einträge in der Excel-Datei gefunden werden konnten.");
+//                return;
+//            }
             // PDF-Dokument schließen
             document.close();
             System.out.println("---------------------------");
             System.out.println("Successful.");
-        } catch (DocumentException e) {
-            e.printStackTrace();
         } catch (Exception e) {
-            e.printStackTrace();
+            displayErrorInGui("Es konnten keine Stundenzettel für den Abrechnungsmonat generiert werden, da keine gültigen Einträge in der Excel-Datei gefunden werden konnten.");
         }
 
     }

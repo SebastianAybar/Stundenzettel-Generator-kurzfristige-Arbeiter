@@ -12,6 +12,21 @@ public class MitarbeiterMonat {
     private String svBrutto;
     private String arbeitszeit;
 
+    public MitarbeiterMonat() {
+    }
+
+    public MitarbeiterMonat(String berater, String mandant, String abrechnungsmonat, String nachnameVorname, String eintrittsdatum, String austrittsdatum, String personengruppenschluesselKurz, String personengruppenschluesselLang, String svBrutto, String arbeitszeit) {
+        this.berater = berater;
+        this.mandant = mandant;
+        this.abrechnungsmonat = abrechnungsmonat;
+        this.nachnameVorname = nachnameVorname;
+        this.eintrittsdatum = eintrittsdatum;
+        this.austrittsdatum = austrittsdatum;
+        this.personengruppenschluesselKurz = personengruppenschluesselKurz;
+        this.personengruppenschluesselLang = personengruppenschluesselLang;
+        this.svBrutto = svBrutto;
+        this.arbeitszeit = arbeitszeit;
+    }
 
     public String getBerater() {
         return berater;

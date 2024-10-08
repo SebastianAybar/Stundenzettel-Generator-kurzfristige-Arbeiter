@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
 import java.util.*;
@@ -37,6 +38,8 @@ public class ExcelListeWriter {
                 workbook = WorkbookFactory.create(fileStundenzettelVorlageLocal);
                 Sheet currentSheet = workbook.getSheetAt(0);
 
+                int counterSheets = 0;
+
                 for (int i = 0; i < monatsliste.size(); i++) {
 
                     workbook.cloneSheet(0);
@@ -50,10 +53,26 @@ public class ExcelListeWriter {
                     List<LocalDate> alleTageDesMonatsAlt = getAlleTageDesMonatsAlt(datum);
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
                     DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd-MMM-uuuu");
+
+                    YearMonth abrechnungsmonat = YearMonth.of(Integer.parseInt(datum[0]), Integer.parseInt(datum[1]));
                     LocalDate eintrittsdatum = LocalDate.parse(monatsliste.get(i).getEintrittsdatum(), formatter2);
                     LocalDate austrittsdatum = LocalDate.parse(monatsliste.get(i).getAustrittsdatum(), formatter2);
-                    List<LocalDate> alleTageDesMonats = getAlleTageDesMonats(datum, eintrittsdatum.format(formatter), austrittsdatum.format(formatter));
 
+                    if(eintrittsdatum.getMonth() == abrechnungsmonat.getMonth() || austrittsdatum.getMonth() == abrechnungsmonat.getMonth()) {
+                        if (eintrittsdatum.isBefore(austrittsdatum)) {
+                            if (eintrittsdatum.getMonth() == austrittsdatum.getMonth()) {
+
+                            } else {
+
+                            }
+                        } else {
+                            displayErrorInGui("Das Eintrittsdatum des Mitarbeiters \"" + monatsliste.get(i).getNachnameVorname() + "\" liegt nicht vor dem angegebenen Austrittsdatum.\nDer Mitarbeiter wird übersprungen.");
+                        }
+                    } else {
+                        displayErrorInGui("Der Beschäftigungszeitraum des Mitarbeiters \"" + monatsliste.get(i).getNachnameVorname() + "\" liegt nicht im angegebenen Abrechnungsmonat.\nDer Mitarbeiter wird übersprungen.");
+                    }
+
+                    List<LocalDate> alleTageDesMonats = getAlleTageDesMonats(datum, eintrittsdatum.format(formatter), austrittsdatum.format(formatter));
 
                     int counterTage = 0;
 
@@ -68,6 +87,12 @@ public class ExcelListeWriter {
                                 String cellValue = cell.getStringCellValue().trim();
                                 if (cellValue.equals("<<Abrechnungsmonat>>")) {
                                     cell.setCellValue(monatsliste.get(i).getAbrechnungsmonat());
+                                }
+                                if (cellValue.equals("<<Eintrittsdatum>>")) {
+                                    cell.setCellValue(monatsliste.get(i).getEintrittsdatum());
+                                }
+                                if (cellValue.equals("<<Austrittsdatum>>")) {
+                                    cell.setCellValue(monatsliste.get(i).getAustrittsdatum());
                                 }
                                 if (cellValue.equals("<<Mitarbeiter>>")) {
                                     cell.setCellValue(monatsliste.get(i).getNachnameVorname());

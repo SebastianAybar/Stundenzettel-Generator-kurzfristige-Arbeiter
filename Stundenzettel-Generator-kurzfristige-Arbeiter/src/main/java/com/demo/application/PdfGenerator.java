@@ -87,8 +87,7 @@ public class PdfGenerator {
             System.out.println("---------------------------");
             System.out.println("Successful.");
         } catch (Exception e) {
-            e.printStackTrace();
-            displayErrorInGui("Es konnten keine Stundenzettel für den Abrechnungsmonat generiert werden, da keine gültigen Einträge in der Excel-Datei gefunden werden konnten.");
+            displayErrorInGui("Es konnten keine Stundenzettel für den Abrechnungsmonat " + filename + " generiert werden.");
         }
 
     }

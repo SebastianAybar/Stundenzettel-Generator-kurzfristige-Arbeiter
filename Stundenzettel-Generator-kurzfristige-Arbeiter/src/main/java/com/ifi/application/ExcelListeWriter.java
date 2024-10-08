@@ -152,7 +152,7 @@ public class ExcelListeWriter {
 
 
                                 } else {
-                                    displayErrorInGui("Beschäftigungszeitraum zu groß.");
+                                    displayErrorInGui("Beschäftigungszeitraum von " + monatsliste.get(i).getNachnameVorname() + " zu groß.");
                                     alleValidationsErfolgreich = false;
                                     workbook.removeSheetAt(counterSheets + 1);
                                     continue;

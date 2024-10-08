@@ -522,6 +522,9 @@ public class ExcelListeWriter {
                             cell.setCellValue("");
                         }
                     }
+                    if (cellValue.startsWith("<<Auf")) {
+                        cell.setCellValue("");
+                    }
                 } else {
                     //System.out.println("Aktuelle Zelle (" + cell.getRowIndex() + ", " + cell.getColumnIndex() + ") aus der Stundenzettel-Vorlage enthält kein <tag>. Wird übersprungen.");
                 }

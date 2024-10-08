@@ -292,7 +292,7 @@ public class StundenzettelGeneratorController implements Initializable {
                 //System.out.println("INFO: Excel-Datei wurde erfolgreich eingelesen. Mitarbeiter-Objekte wurden erstellt");
 
                 ExcelListeWriter excelListeWriter = new ExcelListeWriter(textfieldOutputPath.getText());
-                excelListeWriter.writeToExcel(jahresliste, textfieldStundenlohn.getText());
+                excelListeWriter.writeToExcel(jahresliste, textfieldStundenlohn.getText(), checkboxErsetzen.isSelected());
 
                 setMessageSuccess(lblSchlussnachricht, VALIDATION_SUCCESS_PDF);
 

@@ -166,7 +166,7 @@
             </HBox>
         <HBox alignment="TOP_RIGHT" prefHeight="18.0" prefWidth="486.0" VBox.vgrow="ALWAYS">
                <children>
-             <CheckBox fx:id="checkboxErsetzen" alignment="CENTER_RIGHT" disable="true" mnemonicParsing="false" selected="true" text="Datei ersetzen?">
+             <CheckBox fx:id="checkboxErsetzen" alignment="CENTER_RIGHT" mnemonicParsing="false" selected="true" text="Datei ersetzen?">
                <font>
                  <Font name="System Bold" size="12.0" />
                </font>

@@ -115,10 +115,10 @@ public class ExcelListeWriter {
 
 
                                     // Mitarbeiter in zwei abrecchnungsmonate aufteilen
-
+                                    alleTageDesMonatsAlt = getAlleTageDesMonatsAlt(abrechnungsmonat_1.split("/"));
                                     // Im ersten Abrechnungsmonat wird das erste svbrutto ganz normal generiert
 
-                                    write(datum, eintrittsdatum_1, formatter, austrittsdatum_1, currentSheet, monatsliste, i
+                                    write(abrechnungsmonat_1.split("/"), eintrittsdatum_1, formatter, austrittsdatum_1, currentSheet, monatsliste, i
                                             , alleTageDesMonatsAlt, workbook, arbeitszeitenCells, lohn, svBrutto_1);
 
                                     // für den zweiten abbrechnungsmonat müssen die eintritts- und austrittsdaten + svbrutto2 in die nächte monatsliste eingefügt werden (zweiter stundenzettel kann nicht sofort generiert werden)
@@ -145,11 +145,6 @@ public class ExcelListeWriter {
                                         neueMonatsliste.add(zweiterMitarbeiterMonat);
                                         jahresliste.add(neueMonatsliste);
                                     }
-
-
-//                                    write(datum, eintrittsdatum_2, formatter, austrittsdatum_2, currentSheet, monatsliste, i
-//                                            , alleTageDesMonatsAlt, workbook, arbeitszeitenCells, lohn, svBrutto_2);
-
 
                                 } else {
                                     displayErrorInGui("Beschäftigungszeitraum zu groß.");

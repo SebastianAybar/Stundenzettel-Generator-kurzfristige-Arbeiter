@@ -193,7 +193,7 @@ public class Einzelerstellung {
                     stundenlohn = svBrutto / stundensatz;
                     if(stundenlohn > 150) {
                         DecimalFormat df = new DecimalFormat("#.00");
-                        displayErrorInGui("Stundenlohn liegt bei: " + df.format(stundenlohn) + "€.\n" + "Brutto ist zu hoch für den Beschäfigungszeitraum.");
+                        displayErrorInGui("Stundenlohn liegt bei: " + df.format(stundenlohn) + "€.\n" + "Brutto von " + name +  " ist zu hoch für den Beschäfigungszeitraum.");
                         return;
                     }
                 }

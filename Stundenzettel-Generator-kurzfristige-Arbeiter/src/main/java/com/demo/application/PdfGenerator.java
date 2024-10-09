@@ -148,7 +148,7 @@ public class PdfGenerator {
         zelle.setBorder(CELL_BORDER_TRANSPARENT);
         mitarbeiterinfoTabelle.addCell(zelle);
 
-        zelle = new PdfPCell(new Paragraph(sheet.getRow(ROW_MITARBEITERNUMMER).getCell(COLUMN_MITARBEITERNUMMER).getStringCellValue(), TBL_MITARBEITERINFO_FONT));
+        zelle = new PdfPCell(new Paragraph(sheet.getRow(ROW_MITARBEITERNUMMER).getCell(COLUMN_MITARBEITERNUMMER).getStringCellValue().replace(".0", ""), TBL_MITARBEITERINFO_FONT));
         zelle.setBorder(CELL_BORDER_TRANSPARENT);
         mitarbeiterinfoTabelle.addCell(zelle);
 

@@ -156,7 +156,7 @@ public class ExcelListeWriter {
                                 }
                             }
                         } else {
-                            displayErrorInGui("Das Eintrittsdatum des Mitarbeiters \"" + monatsliste.get(i).getNachnameVorname() + "\" liegt nicht vor dem angegebenen Austrittsdatum.\nDer Mitarbeiter wird übersprungen.");
+                            displayErrorInGui("Das Eintrittsdatum des Mitarbeiters \"" + monatsliste.get(i).getNachnameVorname() + "\" liegt nicht vor dem angegebenen Austrittsdatum.");
                             alleValidationsErfolgreich = false;
                             workbook.removeSheetAt(counterSheets + 1);
                             continue;
@@ -412,9 +412,9 @@ public class ExcelListeWriter {
                 workbook.removeSheetAt(0);
 
                 //Excel-Output-Dateien
-                try (FileOutputStream fileOutputStream = new FileOutputStream(outputPath + "\\test" + counter++ + ".xlsx")) {
-                    workbook.write(fileOutputStream);
-                }
+//                try (FileOutputStream fileOutputStream = new FileOutputStream(outputPath + "\\test" + counter++ + ".xlsx")) {
+//                    workbook.write(fileOutputStream);
+//                }
 
 
                 String fileName = monatsliste.get(0).getAbrechnungsmonat().replace("/", "-");
@@ -582,7 +582,7 @@ public class ExcelListeWriter {
                 stundenlohn = svBrutto / stundensatz;
                 if(stundenlohn > 150) {
                     DecimalFormat df = new DecimalFormat("#.00");
-                    displayErrorInGui("Stundenlohn liegt bei: " + df.format(stundenlohn) + "€.\n" + "Brutto von " + monatsliste.get(i).getNachnameVorname() + " ist zu hoch für den Beschäfigungszeitraum.");
+                    displayErrorInGui("Stundenlohn von " + monatsliste.get(i).getNachnameVorname() + " liegt bei " + df.format(stundenlohn) + ".\nBrutto zu hoch für Beschäftigungszeitraum.");
                     workbook.removeSheetAt(counterSheets+1);
                     alleValidationsErfolgreich = false;
                     return;

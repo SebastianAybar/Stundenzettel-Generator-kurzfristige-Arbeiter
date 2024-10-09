@@ -127,6 +127,9 @@ public class Einzelerstellung {
                                 break;
                             }
                         }
+                        if (cellValue.startsWith("<<Auf")) {
+                            cell.setCellValue("");
+                        }
                         //Wir wollen die cell nur hinzufügen, wenn der wert in datenDesMonatsAlt.get(counterTage) auch in datenDesMonats enthalten ist
                         /*if (cellValue.startsWith("<<Std")) {
                             arbeitszeitenCells.add(cell);

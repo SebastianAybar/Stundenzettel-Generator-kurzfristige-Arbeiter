@@ -522,7 +522,7 @@ public class StundenzettelGeneratorController implements Initializable {
 
 //        textfieldInputPath.setText("C:\\Users\\MM\\Desktop\\neue_excel_kurzarbeiter\\KFB_0124.xlsx");
 //        textfieldOutputPath.setText("C:\\Users\\MM\\Desktop\\neue_excel_kurzarbeiter\\generierte_Dateien");
-        textfieldInputPath.setText("C:\\Users\\sebas\\OneDrive\\Dokumente\\GitHub\\Stundenzettel-Generator-kurzfristige-Arbeiter\\Dateien\\KFB_1223.xlsx");
-        textfieldOutputPath.setText("C:\\Users\\sebas\\OneDrive\\Dokumente\\GitHub\\Stundenzettel-Generator-kurzfristige-Arbeiter\\Dateien\\test output");
+//        textfieldInputPath.setText("C:\\Users\\sebas\\OneDrive\\Dokumente\\GitHub\\Stundenzettel-Generator-kurzfristige-Arbeiter\\Dateien\\KFB_1223.xlsx");
+//        textfieldOutputPath.setText("C:\\Users\\sebas\\OneDrive\\Dokumente\\GitHub\\Stundenzettel-Generator-kurzfristige-Arbeiter\\Dateien\\test output");
     }
 }

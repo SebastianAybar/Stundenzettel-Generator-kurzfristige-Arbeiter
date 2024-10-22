@@ -8,6 +8,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.poi.ss.usermodel.Row;
 
 import java.io.File;
 import java.net.URL;
@@ -19,6 +20,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static com.demo.application.ExcelListeReader.getCellAsString;
 import static com.demo.helper.Constants.*;
 import static com.demo.helper.Utils.*;
 import static com.demo.helper.Validation.*;
@@ -263,6 +265,21 @@ public class StundenzettelGeneratorController implements Initializable {
                 fieldsExcelListeValid = false;
             }
 
+            //Prüfung Feld Input Path
+//            if (isTextfieldFilled(textfieldInputPath)) {
+//                if (isPathAnExcelFile(textfieldInputPath)) {
+//                    setTextfieldValid(textfieldInputPath, lblValidationInputPath);
+//                } else {
+//                    setTextfieldInvalid(textfieldInputPath, lblValidationInputPath, VALIDATION_WRONG_DATE_FORMAT);
+//                    fieldsExcelListeValid = false;
+//                }
+//            } else {
+//                setTextfieldInvalid(textfieldInputPath, lblValidationInputPath, VALIDATION_EMPTY_FIELD);
+//                fieldsExcelListeValid = false;
+//            }
+
+
+
             // Prüfung Feld Input Path
             if (!isTextfieldFilled(textfieldInputPath)) {
                 setTextfieldInvalid(textfieldInputPath, lblValidationInputPath, VALIDATION_EMPTY_FIELD);
@@ -272,7 +289,7 @@ public class StundenzettelGeneratorController implements Initializable {
 
                 if (!isPathAnExcelFile(textfieldInputPath)) {
                     setTextfieldInvalid(textfieldInputPath, lblValidationInputPath, VALIDATION_WRONG_INPUT_PATH);
-                    //System.out.println("ERROR: " + VALIDATION_WRONG_INPUT_PATH);
+//                    System.out.println("ERROR: " + VALIDATION_WRONG_INPUT_PATH);
                     fieldsExcelListeValid = false;
                 } else {
                     setTextfieldValid(textfieldInputPath, lblValidationInputPath);
@@ -282,22 +299,32 @@ public class StundenzettelGeneratorController implements Initializable {
 
             // Bei Klick auf Button OK: Wenn alle Felder gültig, dann weiter
             if (fieldsExcelListeValid) {
-                //System.out.println("INFO: Alle Felder sind gültig. Excel-Datei wird eingelesen...");
 
-                //if( alles andere auch passt, dann Eingabe-Excel-Datei einlesen, Ausgabe-Excel-Datei mit Stundenzettel-Vorlage erstellen und Stundenzettel-PDF generieren )
+
                 ExcelListeReader excelListeReader = new ExcelListeReader(textfieldInputPath.getText());
-                List<List<MitarbeiterMonat>> jahresliste = excelListeReader.getListOfAbrechnungsmonate(Double.parseDouble(textfieldStundenlohn.getText().replace(",", ".")));
 
-                excelListeReader.printJahresliste(jahresliste);
-                //System.out.println("INFO: Excel-Datei wurde erfolgreich eingelesen. Mitarbeiter-Objekte wurden erstellt");
+//                if(excelListeReader.checkColumns()) {
+                    List<List<MitarbeiterMonat>> jahresliste = excelListeReader.getListOfAbrechnungsmonate(Double.parseDouble(textfieldStundenlohn.getText().replace(",", ".")));
+                    if (jahresliste.isEmpty()) {
+                        setMessageFailed(lblSchlussnachricht, "Excel Liste ist ungültig");
+                        return;
+                    }
+                    excelListeReader.printJahresliste(jahresliste);
+                    //System.out.println("INFO: Excel-Datei wurde erfolgreich eingelesen. Mitarbeiter-Objekte wurden erstellt");
 
-                ExcelListeWriter excelListeWriter = new ExcelListeWriter(textfieldOutputPath.getText());
-                excelListeWriter.writeToExcel(jahresliste, textfieldStundenlohn.getText(), checkboxErsetzen.isSelected());
+                    ExcelListeWriter excelListeWriter = new ExcelListeWriter(textfieldOutputPath.getText());
+                    excelListeWriter.writeToExcel(jahresliste, textfieldStundenlohn.getText(), checkboxErsetzen.isSelected());
 
-                setMessageSuccess(lblSchlussnachricht, VALIDATION_SUCCESS_PDF);
+                    setMessageSuccess(lblSchlussnachricht, VALIDATION_SUCCESS_PDF);
 
-                // (Neuer) Stundenlohn-Wert wird in die lokale Stundenlohn-Datei gespeichert
-                saveStundenlohnToDatei(textfieldStundenlohn.getText());
+                    // (Neuer) Stundenlohn-Wert wird in die lokale Stundenlohn-Datei gespeichert
+                    saveStundenlohnToDatei(textfieldStundenlohn.getText());
+
+//                } else {
+//                    System.out.println("INFO: Nicht alle Felder sind gültig. Felder prüfen.");
+//                    displayErrorInGui("Die Spaltenanordnung in der Excel Datei ist falsch.\nProgramm kann nicht ausgeführt werden.");
+//                    setMessageFailed(lblSchlussnachricht, VALIDATION_FAILED_PDF);
+//                }
 
             } else {
                 //System.out.println("INFO: Nicht alle Felder sind gültig. Felder prüfen.");
@@ -511,6 +538,7 @@ public class StundenzettelGeneratorController implements Initializable {
 
 
 //================================================== CLASS METHODS =====================================================
+
 
     // Alles innerhalb dieser Methode wird direkt nach Programmstart durchgeführt ("implements Initializable" notwendig)
     @Override

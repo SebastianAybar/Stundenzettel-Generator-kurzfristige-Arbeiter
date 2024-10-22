@@ -42,29 +42,29 @@ public class PdfGenerator {
                 Paragraph title = createTitle(TITLE_NAME);
 
                 // Unternehmenslogo erstellen
-//                try {
-//                    // logo removed
-//                    InputStream resourceStream = ExcelListeWriter.class.getResourceAsStream(resourceFilePath);
-//
-//                    if (resourceStream == null) {
-//                        System.err.println("Das bild konnte nicht im Jar-Path gefunden werden: " + resourceFilePath);
-//                        return;
-//                    }
-//
-////                     Create the destination path in the home directory
-//                    Path destinationPath = Paths.get(PATH_FILE_LOGO_LOCAL);
-//
-//                    if (!Files.exists(destinationPath)) {
-////                         Copy the file from resources to the home directory
-//                        Files.copy(resourceStream, destinationPath, StandardCopyOption.REPLACE_EXISTING);
-//                        System.out.println("Logo wurde kopiert zu " + destinationPath);
-//                    } else {
-//                        System.out.println("Logo existiert bereits im Verzeichnis: " + PATH_FILE_LOGO_LOCAL);
-//                    }
-//                } catch (Exception e) {
-//                    System.out.println("Logo problem hier");
-//                }
-//                Image logo = createLogo(PATH_FILE_LOGO_LOCAL);
+                try {
+                    // logo removed
+                    InputStream resourceStream = ExcelListeWriter.class.getResourceAsStream(resourceFilePath);
+
+                    if (resourceStream == null) {
+                        System.err.println("Das bild konnte nicht im Jar-Path gefunden werden: " + resourceFilePath);
+                        return;
+                    }
+
+//                     Create the destination path in the home directory
+                    Path destinationPath = Paths.get(PATH_FILE_LOGO_LOCAL);
+
+                    if (!Files.exists(destinationPath)) {
+//                         Copy the file from resources to the home directory
+                        Files.copy(resourceStream, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+                        System.out.println("Logo wurde kopiert zu " + destinationPath);
+                    } else {
+                        System.out.println("Logo existiert bereits im Verzeichnis: " + PATH_FILE_LOGO_LOCAL);
+                    }
+                } catch (Exception e) {
+                    System.out.println("Logo problem hier");
+                }
+                Image logo = createLogo(PATH_FILE_LOGO_LOCAL);
 
                 // Mitarbeiterinfotabelle (Mitarbeitername, Mitarbeiternummer, Jahr/Monat) erstellen
                 PdfPTable mitarbeiterinfoTabelle = createMitarbeiterinfoTabelle(workbook.getSheetAt(i));

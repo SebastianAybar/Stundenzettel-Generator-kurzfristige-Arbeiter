@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.demo.helper.Validation.isSvBruttoValid;
+import static com.demo.helper.Validation.*;
 
 public class ExcelListeReader {
 
@@ -37,27 +37,70 @@ public class ExcelListeReader {
             List<List<MitarbeiterMonat>> jahresliste = new ArrayList<>();
 
             List<MitarbeiterMonat> monatsliste = new ArrayList<>();
-            String monat = listMitarbeiterMonat.get(0).getAbrechnungsmonat();
+            if(!listMitarbeiterMonat.isEmpty()) {
+                String monat = listMitarbeiterMonat.get(0).getAbrechnungsmonat();
 
-            for (MitarbeiterMonat row : listMitarbeiterMonat) {
-                if (row.getAbrechnungsmonat().equals(monat)) {
-                    monatsliste.add(row);
-                } else {
-                    jahresliste.add(monatsliste);
-                    monatsliste = new ArrayList<>();
-                    monat = row.getAbrechnungsmonat();
-                    monatsliste.add(row);
+                for (MitarbeiterMonat row : listMitarbeiterMonat) {
+                    if (row.getAbrechnungsmonat().equals(monat)) {
+                        monatsliste.add(row);
+                    } else {
+                        jahresliste.add(monatsliste);
+                        monatsliste = new ArrayList<>();
+                        monat = row.getAbrechnungsmonat();
+                        monatsliste.add(row);
 
-                    printMonatsliste(monatsliste);
+                        printMonatsliste(monatsliste);
+                    }
                 }
+                jahresliste.add(monatsliste);
             }
-            jahresliste.add(monatsliste);
-
             return jahresliste;
         } else {
             System.out.println("ERROR: isAllRowsRead is false");
             return new ArrayList<>();
         }
+    }
+
+    //Prüfung der Spaltenanordnung
+    public boolean checkColumns() {
+        try (FileInputStream inputStream = new FileInputStream(pathInput)) {
+            Workbook excelFile = WorkbookFactory.create(inputStream);
+            Sheet excelSheet = excelFile.getSheetAt(0);
+            listMitarbeiterMonat = new ArrayList<>();
+
+            Row ueberschriftRow = excelSheet.getRow(0);
+            String cellValue = getCellAsString(ueberschriftRow.getCell(2));
+            if (!cellValue.equals("Abrechnungsmonat") || !cellValue.equals("abrechnungsmonat")) {
+//                displayErrorInGui("Die Spaltenanordnung in der Excel Datei ist falsch.\nProgramm kann nicht ausgeführt werden.");
+                return false;
+            }
+            cellValue = getCellAsString(ueberschriftRow.getCell(4));
+            if (!cellValue.equals("Eintrittsdatum") || !cellValue.equals("eintrittsdatum")) {
+//                displayErrorInGui("Die Spaltenanordnung in der Excel Datei ist falsch.\nProgramm kann nicht ausgeführt werden.");
+                return false;
+            }
+            cellValue = getCellAsString(ueberschriftRow.getCell(5));
+            if (!cellValue.equals("Austrittsdatum") || !cellValue.equals("austrittsdatum")) {
+//                displayErrorInGui("Die Spaltenanordnung in der Excel Datei ist falsch.\nProgramm kann nicht ausgeführt werden.");
+                return false;
+            }
+            cellValue = getCellAsString(ueberschriftRow.getCell(8));
+            if (!cellValue.equals("Buchungswert") || !cellValue.equals("buchungswert")) {
+//                displayErrorInGui("Die Spaltenanordnung in der Excel Datei ist falsch.\nProgramm kann nicht ausgeführt werden.");
+                return false;
+            }
+
+        } catch (FileNotFoundException e) {
+            isAllRowsRead = false;
+            System.err.println("Diese Meldung sollte nie angezeigt werden, da dieser Fall bereits durch die Validierung-Methode isPathAnExcelFile() abgefangen wird");
+        } catch (IndexOutOfBoundsException e) {
+            isAllRowsRead = false;
+            System.out.println("ERROR: Fehler outofbounds");
+        } catch (IOException e) {
+            isAllRowsRead = false;
+            System.out.println("Error. Check code! (1): " + e);
+        }
+        return true;
     }
 
     public void readAllRows(Double stundenlohn) {

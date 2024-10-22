@@ -23,7 +23,7 @@ public class ApplicationStart extends Application {
         scene.getStylesheets().add(css);
         Image image = new Image("/clock.png");
         stage.getIcons().add(image);
-        stage.setTitle("Stundenzettel Generator für kurzfristige Arbeiter");
+        stage.setTitle("Stundenzettel Generator für kurzfristige Mitarbeiter");
         stage.setScene(scene);
         stage.show();
         stage.setMinWidth(Constants.APPLICATION_WINDOW_WIDTH);

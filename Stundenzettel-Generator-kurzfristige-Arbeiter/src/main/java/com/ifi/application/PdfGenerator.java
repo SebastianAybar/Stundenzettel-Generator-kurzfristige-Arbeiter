@@ -272,12 +272,26 @@ public class PdfGenerator {
             }
         }
 
-        if (insgArbeitszeitStunden >= 10) insgArbeitszeit += insgArbeitszeitStunden + ":";
-        else insgArbeitszeit += "0" + insgArbeitszeitStunden + ":";
-        if (insgArbeitszeitMinuten >= 10) insgArbeitszeit += insgArbeitszeitMinuten;
-        else insgArbeitszeit += "0" + insgArbeitszeitMinuten;
-        //if (insgArbeitszeitSekunden >= 10) insgArbeitszeit += insgArbeitszeitSekunden;
-        //else insgArbeitszeit += "0" + insgArbeitszeitSekunden;
+
+        int insgArbeitszeitHours;
+
+        double insgArbeitszeitMinutes = insgDezimal * 60;
+        insgArbeitszeitHours = (int) insgDezimal;
+        double minuten = insgArbeitszeitMinutes % 60;
+        double sekunden = Double.parseDouble("0." + String.valueOf(insgArbeitszeitMinutes).split("\\.")[1]);
+        sekunden *= 60;
+
+
+        if (insgArbeitszeitHours >= 10) insgArbeitszeit += insgArbeitszeitHours + ":";
+        else insgArbeitszeit += "0" + insgArbeitszeitHours + ":";
+        if (minuten >= 10) insgArbeitszeit += String.valueOf(minuten).split("\\.")[0];
+        else insgArbeitszeit += "0" + String.valueOf(minuten).split("\\.")[0];
+        //if (sekunden >= 10) hourMinutes += ":" + (int) sekunden;
+        //else hourMinutes += ":" + "0" + (int) sekunden;
+
+
+
+
 
         addSummenzeileToStundenTabelle(stundenzettelTabelle, insgArbeitszeit, insgDezimal, insgArbeitszeitNetto);
 
@@ -347,6 +361,7 @@ public class PdfGenerator {
         pdfZelle = new PdfPCell(zelleninhalt);
         pdfZelle.setHorizontalAlignment(Element.ALIGN_CENTER);
         pdfZelle.setPadding(TBL_STUNDEN_PADDING);
+//        stundenTabelle.addCell("");
         stundenTabelle.addCell(pdfZelle);
 
         // Zelle: Dezimal

@@ -225,6 +225,8 @@ public class StundenzettelGeneratorController implements Initializable {
         textfieldAbrechnungsmonat.setText("");
         textfieldName.setText("");
         textfieldSvBrutto.setText("");
+        textfieldEintrittsdatum.setText("");
+        textfieldAustrittsdatum.setText("");
 
         btnExcelListeClicked = false;
         btnEinzelerstellungClicked = true;
@@ -463,7 +465,8 @@ public class StundenzettelGeneratorController implements Initializable {
 
             //Wenn alles geklappt hat
             if (fieldsEinzelerstellungValid) {
-                if (eintrittsdatum.getMonth() == abrechnungsmonat.getMonth() || austrittsdatum.getMonth() == abrechnungsmonat.getMonth()) {
+                if ((eintrittsdatum.getMonth() == abrechnungsmonat.getMonth() || austrittsdatum.getMonth() == abrechnungsmonat.getMonth()) &&
+                     eintrittsdatum.getYear() == abrechnungsmonat.getYear() && austrittsdatum.getYear() == abrechnungsmonat.getYear()) {
                     if (eintrittsdatum.isBefore(austrittsdatum)) {
                         if (svBrutto >= Double.parseDouble(textfieldStundenlohn.getText().replace(",", "."))) {
                             if (eintrittsdatum.getMonth() == austrittsdatum.getMonth()) {

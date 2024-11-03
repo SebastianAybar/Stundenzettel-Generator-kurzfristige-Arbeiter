@@ -671,8 +671,17 @@ public class ExcelListeWriter {
             for (int k = 0; k < arbeitszeitenCells.size(); k++) {
                 hourMinutes = "";
                 if (werktage[k] != null) {
+                    double arbeitszeit = Double.parseDouble(werktage[k].replace(",", "."));
                     //Wir befüllen die Spalte "Dezimal"
-                    arbeitszeitenCells.get(k).setCellValue(werktage[k]);
+                    if (arbeitszeit < 6) {
+                        arbeitszeitenCells.get(k).setCellValue(werktage[k]);
+                    } else if (arbeitszeit < 9) {
+                        arbeitszeitenCells.get(k).setCellValue(String.valueOf(arbeitszeit + 0.5).replace(".", ","));
+                        arbeitszeit = arbeitszeit + 0.5;
+                    } else {
+                        arbeitszeitenCells.get(k).setCellValue(String.valueOf(arbeitszeit + 0.75).replace(".", ","));
+                        arbeitszeit = arbeitszeit + 0.75;
+                    }
                     //Wir befüllen sie Spalte "Arbeitszeit Netto"
                     arbeitszeitenCells.get(k).getRow().getCell(arbeitszeitenCells.get(k).getColumnIndex() + 1).setCellValue(werktage[k]);
                     //Wir befüllen die Spalte "Aufgezeichnet am"
@@ -685,14 +694,18 @@ public class ExcelListeWriter {
                     }
                     arbeitszeitenCells.get(k).getRow().getCell(arbeitszeitenCells.get(k).getColumnIndex() + 2).setCellValue(aufgezeichnetAm);
                     //Wir befüllen die Spalte "Arbeitszeit"
-                    String temp = werktage[k].replace(",", ".");
+                    String temp = String.valueOf(arbeitszeit).replace(",", ".");
                     insgMinuten = Double.parseDouble(temp) * 60;
                     stunden = (int) Double.parseDouble(temp);
                     minuten = insgMinuten % 60;
                     sekunden = Double.parseDouble("0." + String.valueOf(insgMinuten).split("\\.")[1]);
                     sekunden = sekunden * 60;
 
-                    hourMinutes = hourMinutes + "0" + stunden + ":";
+                    if(stunden < 10) {
+                        hourMinutes = hourMinutes + "0" + stunden + ":";
+                    } else {
+                        hourMinutes = hourMinutes + stunden + ":";
+                    }
                     if (minuten >= 10) hourMinutes += String.valueOf(minuten).split("\\.")[0];
                     else hourMinutes += "0" + String.valueOf(minuten).split("\\.")[0];
                                 /*if (sekunden >= 10) hourMinutes += ":" + (int) sekunden;

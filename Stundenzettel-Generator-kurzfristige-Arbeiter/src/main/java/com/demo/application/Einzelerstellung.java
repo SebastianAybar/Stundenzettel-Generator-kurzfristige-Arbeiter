@@ -179,7 +179,7 @@ public class Einzelerstellung {
 
             //Wenn svBrutto die Grenze übersteigt
             if (svBrutto >= svBruttoGrenze) {
-                totalMean = 6.5 + (random.nextDouble() * 1.5); //Damit nicht jeder Mitarbeiter exakt 8h durchschnittliche Arbeitszeit hat
+                totalMean = 6 + (random.nextDouble() * 1.5); //Damit nicht jeder Mitarbeiter exakt 8h durchschnittliche Arbeitszeit hat
                 gerundeteArbeitstage = randomArbeitstage; //Anzahl der Arbeitstage
                 stundensatz = gerundeteArbeitstage * totalMean;
                 double stundenlohn = svBrutto / stundensatz;
@@ -284,16 +284,76 @@ public class Einzelerstellung {
 //
 //            System.out.println(arbeitszeitenCells);
 
+//            try {
+//                //Wir befüllen die Spalten, Dezimal, Arbeitszeit Netto, Aufgezeichnet am und Arbeitszeit
+//                String hourMinutes;
+//                double insgMinuten, minuten, sekunden;
+//                int stunden;
+//                for (int i = 0; i < arbeitszeitenCells.size(); i++) {
+//                    hourMinutes = "";
+//                    if (werktage[i] != null) {
+//                        //Wir befüllen die Spalte "Dezimal"
+//                        arbeitszeitenCells.get(i).setCellValue(werktage[i]);
+//                        //Wir befüllen sie Spalte "Arbeitszeit Netto"
+//                        arbeitszeitenCells.get(i).getRow().getCell(arbeitszeitenCells.get(i).getColumnIndex() + 1).setCellValue(werktage[i]);
+//                        //Wir befüllen die Spalte "Aufgezeichnet am"
+//                        LocalDate aufgezeichnetAm = arbeitszeitenCells.get(i).getRow().getCell(arbeitszeitenCells.get(i).getColumnIndex() - 2).getLocalDateTimeCellValue().toLocalDate().plusDays(1);
+//                        DayOfWeek day = aufgezeichnetAm.getDayOfWeek();
+//                        while (day == DayOfWeek.SUNDAY || Utils.isDatumEinFeiertag(aufgezeichnetAm, Integer.parseInt(datum[0]))) {
+//                            //System.out.println("Nächster Tag ist " + day);
+//                            aufgezeichnetAm = aufgezeichnetAm.plusDays(1);
+//                            day = aufgezeichnetAm.getDayOfWeek();
+//                        }
+//                        arbeitszeitenCells.get(i).getRow().getCell(arbeitszeitenCells.get(i).getColumnIndex() + 2).setCellValue(aufgezeichnetAm);
+//                        //Wir befüllen die Spalte "Arbeitszeit"
+//                        String temp = werktage[i].replace(",", ".");
+//                        insgMinuten = Double.parseDouble(temp) * 60;
+//                        stunden = (int) Double.parseDouble(temp);
+//                        minuten = insgMinuten % 60;
+//                        sekunden = Double.parseDouble("0." + String.valueOf(insgMinuten).split("\\.")[1]);
+//                        sekunden = sekunden * 60;
+//
+//                        if (stunden >= 10) hourMinutes += stunden + ":";
+//                        else hourMinutes += "0" + stunden + ":";
+//                        if (minuten >= 10) hourMinutes += String.valueOf(minuten).split("\\.")[0];
+//                        else hourMinutes += "0" + String.valueOf(minuten).split("\\.")[0];
+//                        //if (sekunden >= 10) hourMinutes += ":" + (int) sekunden;
+//                        //else hourMinutes += ":" + "0" + (int) sekunden;
+//
+//                        arbeitszeitenCells.get(i).getRow().getCell(arbeitszeitenCells.get(i).getColumnIndex() - 1).setCellValue(hourMinutes);
+//
+//                    } else {
+//                        arbeitszeitenCells.get(i).setCellValue("");
+//                        arbeitszeitenCells.get(i).getRow().getCell(arbeitszeitenCells.get(i).getColumnIndex() + 2).setCellValue("");
+//                    }
+//                }
+//            } catch (NumberFormatException e) {
+//                System.out.println("Fehler");
+//            }
+
             try {
                 //Wir befüllen die Spalten, Dezimal, Arbeitszeit Netto, Aufgezeichnet am und Arbeitszeit
                 String hourMinutes;
                 double insgMinuten, minuten, sekunden;
                 int stunden;
+                String test;
                 for (int i = 0; i < arbeitszeitenCells.size(); i++) {
                     hourMinutes = "";
                     if (werktage[i] != null) {
+                        DecimalFormat df = new DecimalFormat("#.00");
+                        double arbeitszeit = Double.parseDouble(werktage[i].replace(",", "."));
                         //Wir befüllen die Spalte "Dezimal"
-                        arbeitszeitenCells.get(i).setCellValue(werktage[i]);
+                        if (arbeitszeit < 6) {
+                            arbeitszeitenCells.get(i).setCellValue(werktage[i]);
+                        } else if (arbeitszeit < 9) {
+                            arbeitszeit += 0.5;
+                            String stringArbeitszeit = df.format(arbeitszeit).replace(".", ",");
+                            arbeitszeitenCells.get(i).setCellValue(stringArbeitszeit);
+                        } else {
+                            arbeitszeit += 0.75;
+                            String stringArbeitszeit = df.format(arbeitszeit).replace(".", ",");
+                            arbeitszeitenCells.get(i).setCellValue(stringArbeitszeit);;
+                        }
                         //Wir befüllen sie Spalte "Arbeitszeit Netto"
                         arbeitszeitenCells.get(i).getRow().getCell(arbeitszeitenCells.get(i).getColumnIndex() + 1).setCellValue(werktage[i]);
                         //Wir befüllen die Spalte "Aufgezeichnet am"
@@ -306,7 +366,8 @@ public class Einzelerstellung {
                         }
                         arbeitszeitenCells.get(i).getRow().getCell(arbeitszeitenCells.get(i).getColumnIndex() + 2).setCellValue(aufgezeichnetAm);
                         //Wir befüllen die Spalte "Arbeitszeit"
-                        String temp = werktage[i].replace(",", ".");
+//                        String temp = werktage[i].replace(",", ".");
+                        String temp = String.valueOf(arbeitszeit).replace(",", ".");
                         insgMinuten = Double.parseDouble(temp) * 60;
                         stunden = (int) Double.parseDouble(temp);
                         minuten = insgMinuten % 60;
@@ -328,8 +389,10 @@ public class Einzelerstellung {
                     }
                 }
             } catch (NumberFormatException e) {
+                e.printStackTrace();
                 System.out.println("Fehler");
             }
+
 
             System.out.println("arbeitszeitenCells: " + arbeitszeitenCells);
 

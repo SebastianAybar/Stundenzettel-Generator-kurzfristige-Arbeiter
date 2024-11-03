@@ -548,6 +548,7 @@ public class StundenzettelGeneratorController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         createIfNotExistingLocalFileStundenlohn();
         loadStundenlohnIntoGuiFromDatei(textfieldStundenlohn);
+        saveStundenlohnToDatei(textfieldStundenlohn.getText());
         createIfNotExistingLocalFileLogo();
         createIfNotExistingLocalFileStundenzettelVorlage();
 

@@ -36,7 +36,7 @@ public class Constants {
 
 
     // OTHERS
-    public static final String STUNDENLOHN_VALUE_DEFAULT = "12,00";
+    public static final String STUNDENLOHN_VALUE_DEFAULT = "12";
 
     // VALIDATION MESSAGES
     public static final String VALIDATION_NO_NUMBER = "Keine Zahl";

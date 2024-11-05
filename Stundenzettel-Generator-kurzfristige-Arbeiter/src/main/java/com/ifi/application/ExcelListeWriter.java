@@ -77,7 +77,7 @@ public class ExcelListeWriter {
                     }
 
                     if (eintrittsdatum.getMonth() == abrechnungsmonat.getMonth() || austrittsdatum.getMonth() == abrechnungsmonat.getMonth()) {
-                        if (eintrittsdatum.isBefore(austrittsdatum)) {
+                        if (eintrittsdatum.isBefore(austrittsdatum)|| eintrittsdatum.isEqual(austrittsdatum)) {
                             if (eintrittsdatum.getMonth() == austrittsdatum.getMonth()) {
                                 // nur ein Stundenzettel wird gedruckt
 
@@ -671,16 +671,25 @@ public class ExcelListeWriter {
             for (int k = 0; k < arbeitszeitenCells.size(); k++) {
                 hourMinutes = "";
                 if (werktage[k] != null) {
+                    DecimalFormat df = new DecimalFormat("#.00");
                     double arbeitszeit = Double.parseDouble(werktage[k].replace(",", "."));
                     //Wir befüllen die Spalte "Dezimal"
                     if (arbeitszeit < 6) {
                         arbeitszeitenCells.get(k).setCellValue(werktage[k]);
                     } else if (arbeitszeit < 9) {
-                        arbeitszeitenCells.get(k).setCellValue(String.valueOf(arbeitszeit + 0.5).replace(".", ","));
-                        arbeitszeit = arbeitszeit + 0.5;
+                        arbeitszeit += 0.5;
+                        String stringArbeitszeit = df.format(arbeitszeit).replace(".", ",");
+                        if (stringArbeitszeit.endsWith("0")) {
+                            stringArbeitszeit = stringArbeitszeit.substring(0, stringArbeitszeit.length() - 1);
+                        }
+                        arbeitszeitenCells.get(k).setCellValue(stringArbeitszeit);
                     } else {
-                        arbeitszeitenCells.get(k).setCellValue(String.valueOf(arbeitszeit + 0.75).replace(".", ","));
-                        arbeitszeit = arbeitszeit + 0.75;
+                        arbeitszeit += 0.75;
+                        String stringArbeitszeit = df.format(arbeitszeit).replace(".", ",");
+                        if (stringArbeitszeit.endsWith("0")) {
+                            stringArbeitszeit = stringArbeitszeit.substring(0, stringArbeitszeit.length() - 1);
+                        }
+                        arbeitszeitenCells.get(k).setCellValue(stringArbeitszeit);;
                     }
                     //Wir befüllen sie Spalte "Arbeitszeit Netto"
                     arbeitszeitenCells.get(k).getRow().getCell(arbeitszeitenCells.get(k).getColumnIndex() + 1).setCellValue(werktage[k]);

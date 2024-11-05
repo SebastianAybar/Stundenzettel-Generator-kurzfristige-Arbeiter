@@ -467,7 +467,7 @@ public class StundenzettelGeneratorController implements Initializable {
             if (fieldsEinzelerstellungValid) {
                 if ((eintrittsdatum.getMonth() == abrechnungsmonat.getMonth() || austrittsdatum.getMonth() == abrechnungsmonat.getMonth()) &&
                      eintrittsdatum.getYear() == abrechnungsmonat.getYear() && austrittsdatum.getYear() == abrechnungsmonat.getYear()) {
-                    if (eintrittsdatum.isBefore(austrittsdatum)) {
+                    if (eintrittsdatum.isBefore(austrittsdatum) || eintrittsdatum.isEqual(austrittsdatum)) {
                         if (svBrutto >= Double.parseDouble(textfieldStundenlohn.getText().replace(",", "."))) {
                             if (eintrittsdatum.getMonth() == austrittsdatum.getMonth()) {
                                 //Wir setzen den Stundenlohn im Textdokument im home directory und erfolgreiche Schlussnachricht

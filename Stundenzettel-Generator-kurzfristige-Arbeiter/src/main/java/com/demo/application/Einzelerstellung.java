@@ -348,10 +348,16 @@ public class Einzelerstellung {
                         } else if (arbeitszeit < 9) {
                             arbeitszeit += 0.5;
                             String stringArbeitszeit = df.format(arbeitszeit).replace(".", ",");
+                            if (stringArbeitszeit.endsWith("0")) {
+                                stringArbeitszeit = stringArbeitszeit.substring(0, stringArbeitszeit.length() - 1);
+                            }
                             arbeitszeitenCells.get(i).setCellValue(stringArbeitszeit);
                         } else {
                             arbeitszeit += 0.75;
                             String stringArbeitszeit = df.format(arbeitszeit).replace(".", ",");
+                            if (stringArbeitszeit.endsWith("0")) {
+                                stringArbeitszeit = stringArbeitszeit.substring(0, stringArbeitszeit.length() - 1);
+                            }
                             arbeitszeitenCells.get(i).setCellValue(stringArbeitszeit);;
                         }
                         //Wir befüllen sie Spalte "Arbeitszeit Netto"
